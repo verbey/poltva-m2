@@ -18,7 +18,6 @@ import { Button } from '@/components/ui/button'
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
@@ -29,7 +28,7 @@ import { registerFormSchema } from '../lib/validation-schemas'
 
 const formSchema = registerFormSchema
 
-export default function RegisterPreview() {
+export default function Refister() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -43,7 +42,6 @@ export default function RegisterPreview() {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      // Assuming an async registration function
       console.log(values)
       toast(
         <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
@@ -61,9 +59,6 @@ export default function RegisterPreview() {
       <Card className="mx-auto max-w-sm">
         <CardHeader>
           <CardTitle className="text-2xl">Register</CardTitle>
-          {/* <CardDescription>
-            Create a new account by filling out the form below.
-          </CardDescription> */}
         </CardHeader>
         <CardContent>
           <Form {...form}>

@@ -18,7 +18,6 @@ import { Button } from '@/components/ui/button'
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
@@ -58,9 +57,6 @@ export default function Login() {
       <Card className="mx-auto max-w-sm">
         <CardHeader>
           <CardTitle className="text-2xl">Login</CardTitle>
-          {/* <CardDescription>
-            Enter your email and password to login to your account.
-          </CardDescription> */}
         </CardHeader>
         <CardContent>
           <Form {...form}>
