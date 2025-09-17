@@ -33,7 +33,7 @@ export default function Login() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: '',
+      homeserver: '',
       password: '',
     },
   })
@@ -58,9 +58,9 @@ export default function Login() {
       <Card className="mx-auto max-w-sm">
         <CardHeader>
           <CardTitle className="text-2xl">Login</CardTitle>
-          <CardDescription>
+          {/* <CardDescription>
             Enter your email and password to login to your account.
-          </CardDescription>
+          </CardDescription> */}
         </CardHeader>
         <CardContent>
           <Form {...form}>
@@ -68,18 +68,30 @@ export default function Login() {
               <div className="grid gap-4">
                 <FormField
                   control={form.control}
-                  name="email"
+                  name="homeserver"
                   render={({ field }) => (
                     <FormItem className="grid gap-2">
-                      <FormLabel htmlFor="email">Email</FormLabel>
+                      <FormLabel htmlFor="homeserver">Homeserver</FormLabel>
                       <FormControl>
                         <Input
-                          id="email"
-                          placeholder="johndoe@mail.com"
-                          type="email"
-                          autoComplete="email"
+                          id="homeserver"
+                          placeholder="matrix.org"
+                          autoComplete="url"
                           {...field}
                         />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="username"
+                  render={({ field }) => (
+                    <FormItem className="grid gap-2">
+                      <FormLabel htmlFor="username">Username</FormLabel>
+                      <FormControl>
+                        <Input id="username" placeholder="JohnDoe" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -115,7 +127,7 @@ export default function Login() {
                   Login
                 </Button>
                 <Button variant="outline" className="w-full">
-                  Login with Google
+                  Login with SSO
                 </Button>
               </div>
             </form>

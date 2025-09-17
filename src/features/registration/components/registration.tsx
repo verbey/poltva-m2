@@ -33,7 +33,8 @@ export default function RegisterPreview() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: '',
+      homeserver: '',
+      username: '',
       email: '',
       password: '',
       confirmPassword: '',
@@ -60,30 +61,46 @@ export default function RegisterPreview() {
       <Card className="mx-auto max-w-sm">
         <CardHeader>
           <CardTitle className="text-2xl">Register</CardTitle>
-          <CardDescription>
+          {/* <CardDescription>
             Create a new account by filling out the form below.
-          </CardDescription>
+          </CardDescription> */}
         </CardHeader>
         <CardContent>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
               <div className="grid gap-4">
-                {/* Name Field */}
                 <FormField
                   control={form.control}
-                  name="name"
+                  name="homeserver"
                   render={({ field }) => (
                     <FormItem className="grid gap-2">
-                      <FormLabel htmlFor="name">Full Name</FormLabel>
+                      <FormLabel htmlFor="homeserver">Homeserver</FormLabel>
                       <FormControl>
-                        <Input id="name" placeholder="John Doe" {...field} />
+                        <Input
+                          id="homeserver"
+                          placeholder="matrix.org"
+                          autoComplete="url"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="username"
+                  render={({ field }) => (
+                    <FormItem className="grid gap-2">
+                      <FormLabel htmlFor="username">Username</FormLabel>
+                      <FormControl>
+                        <Input id="username" placeholder="JohnDoe" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
 
-                {/* Email Field */}
                 <FormField
                   control={form.control}
                   name="email"
@@ -104,7 +121,6 @@ export default function RegisterPreview() {
                   )}
                 />
 
-                {/* Password Field */}
                 <FormField
                   control={form.control}
                   name="password"
@@ -124,7 +140,6 @@ export default function RegisterPreview() {
                   )}
                 />
 
-                {/* Confirm Password Field */}
                 <FormField
                   control={form.control}
                   name="confirmPassword"
