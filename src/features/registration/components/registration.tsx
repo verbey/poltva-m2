@@ -6,6 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 
+
 import {
   Form,
   FormControl,
@@ -28,7 +29,7 @@ import { registerFormSchema } from '../lib/validation-schemas'
 
 const formSchema = registerFormSchema
 
-export default function Refister() {
+export default function Register() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
