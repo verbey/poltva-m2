@@ -15,6 +15,8 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
+import Link from "next/link";
+
 const FormSchema = z.object({
   username: z.string().min(2, {
     message: "Username must be at least 2 characters.",
@@ -70,6 +72,12 @@ export function LoginForm() {
         />
         <Button type="submit">Submit</Button>
       </form>
+      <div className="mt-4 text-center text-sm">
+        Don&apos;t have an account?{" "}
+        <Link href="/auth/register" className="underline underline-offset-4">
+          Sign up
+        </Link>
+      </div>
     </Form>
   );
 }
