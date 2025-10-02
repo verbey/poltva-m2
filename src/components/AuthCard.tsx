@@ -10,7 +10,11 @@ import { Input } from "@/components/ui/input";
 
 import { LoginForm } from "@/features/login/components/LoginForm";
 
-export default function AuthCard() {
+interface AuthCardProps {
+  authType: string;
+}
+
+export default function AuthCard(props: AuthCardProps) {
   return (
     <Card className="w-full md:max-w-xl flex flex-col gap-2 items-center">
       <CardHeader className="flex flex-col gap-2 sm:w-3/4 w-9/10">
@@ -30,7 +34,7 @@ export default function AuthCard() {
             defaultValue="matrix.org"
           />
         </div>
-        <LoginForm />
+        {props.authType === "login" && <LoginForm />}
       </CardContent>
     </Card>
   );
