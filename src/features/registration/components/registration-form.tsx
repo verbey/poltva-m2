@@ -17,24 +17,17 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Button } from '@/components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
-import { PasswordInput } from "./password-input"
+import { PasswordInput } from './password-input'
 
 import { registerFormSchema } from '../lib/validation-schemas'
 
 const formSchema = registerFormSchema
 
-export default function Register() {
+export function RegisterForm() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      homeserver: '',
       username: '',
       email: '',
       password: '',
@@ -57,121 +50,97 @@ export default function Register() {
   }
 
   return (
-    <div className="flex min-h-[60vh] h-full w-full items-center justify-center px-4">
-      <Card className="mx-auto max-w-sm">
-        <CardHeader>
-          <CardTitle className="text-2xl">Register</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-              <div className="grid gap-4">
-                <FormField
-                  control={form.control}
-                  name="homeserver"
-                  render={({ field }) => (
-                    <FormItem className="grid gap-2">
-                      <FormLabel htmlFor="homeserver">Homeserver</FormLabel>
-                      <FormControl>
-                        <Input
-                          id="homeserver"
-                          placeholder="matrix.org"
-                          autoComplete="url"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="username"
-                  render={({ field }) => (
-                    <FormItem className="grid gap-2">
-                      <FormLabel htmlFor="username">Username</FormLabel>
-                      <FormControl>
-                        <Input id="username" placeholder="JohnDoe" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
 
-                <FormField
-                  control={form.control}
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem className="grid gap-2">
-                      <FormLabel htmlFor="email">Email</FormLabel>
-                      <FormControl>
-                        <Input
-                          id="email"
-                          placeholder="johndoe@mail.com"
-                          type="email"
-                          autoComplete="email"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+      <div className="w-full max-w-sm">
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)}>
+            <div className="grid gap-4">
+              <FormField
+                control={form.control}
+                name="username"
+                render={({ field }) => (
+                  <FormItem className="grid gap-2">
+                    <FormLabel htmlFor="username">Username</FormLabel>
+                    <FormControl>
+                      <Input id="username" placeholder="JohnDoe" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-                <FormField
-                  control={form.control}
-                  name="password"
-                  render={({ field }) => (
-                    <FormItem className="grid gap-2">
-                      <FormLabel htmlFor="password">Password</FormLabel>
-                      <FormControl>
-                        <PasswordInput
-                          id="password"
-                          placeholder="******"
-                          autoComplete="new-password"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem className="grid gap-2">
+                    <FormLabel htmlFor="email">Email</FormLabel>
+                    <FormControl>
+                      <Input
+                        id="email"
+                        placeholder="johndoe@mail.com"
+                        type="email"
+                        autoComplete="email"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-                <FormField
-                  control={form.control}
-                  name="confirmPassword"
-                  render={({ field }) => (
-                    <FormItem className="grid gap-2">
-                      <FormLabel htmlFor="confirmPassword">
-                        Confirm Password
-                      </FormLabel>
-                      <FormControl>
-                        <PasswordInput
-                          id="confirmPassword"
-                          placeholder="******"
-                          autoComplete="new-password"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem className="grid gap-2">
+                    <FormLabel htmlFor="password">Password</FormLabel>
+                    <FormControl>
+                      <PasswordInput
+                        id="password"
+                        placeholder="******"
+                        autoComplete="new-password"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-                <Button type="submit" className="w-full">
-                  Register
-                </Button>
-              </div>
-            </form>
-          </Form>
-          <div className="mt-4 text-center text-sm">
-            Already have an account?{' '}
-            <Link href="/login" className="underline">
-              Login
-            </Link>
-          </div>
-        </CardContent>
-      </Card>
-    </div>
+              <FormField
+                control={form.control}
+                name="confirmPassword"
+                render={({ field }) => (
+                  <FormItem className="grid gap-2">
+                    <FormLabel htmlFor="confirmPassword">
+                      Confirm Password
+                    </FormLabel>
+                    <FormControl>
+                      <PasswordInput
+                        id="confirmPassword"
+                        placeholder="******"
+                        autoComplete="new-password"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <Button type="submit" className="w-full">
+                Register
+              </Button>
+            </div>
+          </form>
+        </Form>
+        <div className="mt-4 text-center text-sm">
+          Already have an account?{' '}
+          <Link href="/login" className="underline">
+            Login
+          </Link>
+        </div>
+      </div>
   )
 }

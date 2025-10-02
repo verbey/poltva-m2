@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 
 import { LoginForm } from "@/features/login/components/LoginForm";
-
+import { RegisterForm } from "@/features/registration/components/registration-form";
 interface AuthCardProps {
   authType: string;
 }
@@ -18,9 +18,13 @@ export default function AuthCard(props: AuthCardProps) {
   return (
     <Card className="w-full md:max-w-xl flex flex-col gap-2 items-center">
       <CardHeader className="flex flex-col gap-2 sm:w-3/4 w-9/10">
-        <CardTitle>Login</CardTitle>
+        <CardTitle>
+          {props.authType === "register" ? "Register" : "Login"}
+        </CardTitle>
         <CardDescription>
-          Enter credentials to access your Matrix account
+          {props.authType === "register"
+            ? "Create a new Matrix account"
+            : "Enter credentials to access your Matrix account"}
         </CardDescription>
       </CardHeader>
 
@@ -35,6 +39,7 @@ export default function AuthCard(props: AuthCardProps) {
           />
         </div>
         {props.authType === "login" && <LoginForm />}
+        {props.authType === "register" && <RegisterForm />}
       </CardContent>
     </Card>
   );
