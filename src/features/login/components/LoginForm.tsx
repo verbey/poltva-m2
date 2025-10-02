@@ -38,17 +38,22 @@ export function LoginForm() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="w-1/2 space-y-6">
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="w-full space-y-6 flex flex-col gap-2"
+      >
         <FormField
           control={form.control}
           name="username"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="m-0">
               <FormLabel>Username</FormLabel>
               <FormControl>
-                <Input placeholder="username" {...field} />
+                <Input {...field} />
               </FormControl>
-              <FormDescription>Enter your account username.</FormDescription>
+              <FormDescription>
+                Enter your account username or email.
+              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -57,10 +62,10 @@ export function LoginForm() {
           control={form.control}
           name="password"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="m-0">
               <FormLabel>Password</FormLabel>
               <FormControl>
-                <Input placeholder="username" type="password" {...field} />
+                <Input type="password" {...field} />
               </FormControl>
               <FormDescription>Enter your account password.</FormDescription>
               <FormMessage />

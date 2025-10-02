@@ -12,16 +12,16 @@ import { LoginForm } from "@/features/login/components/LoginForm";
 
 export default function AuthCard() {
   return (
-    <Card className="md:w-full md:max-w-xl">
-      <CardHeader>
+    <Card className="w-full md:max-w-xl flex flex-col gap-2 items-center">
+      <CardHeader className="flex flex-col gap-2 sm:w-3/4 w-9/10">
         <CardTitle>Login</CardTitle>
         <CardDescription>
           Enter credentials to access your Matrix account
         </CardDescription>
       </CardHeader>
 
-      <CardContent>
-        <div>
+      <CardContent className="flex flex-col gap-2 sm:w-3/4 w-9/10">
+        <div className="flex flex-col gap-2">
           <Label htmlFor="homeserver">Homeserver</Label>
           <Input
             id="homeserver"
