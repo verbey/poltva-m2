@@ -4,10 +4,6 @@ const urlRegex = /^((ftp|http|https):\/\/)?([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(:\d+)?
 
 export const registerFormSchema = z
   .object({
-    homeserver: z.string().nonempty("Homeserver is required").regex(
-    urlRegex,
-    "Enter a valid URL"
-  ),
   username: z.string().min(3, {
     message: 'Username must be at least 3 characters long.',
   }),
