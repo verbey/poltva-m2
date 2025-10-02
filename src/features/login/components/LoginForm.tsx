@@ -51,9 +51,6 @@ export function LoginForm() {
               <FormControl>
                 <Input {...field} />
               </FormControl>
-              <FormDescription>
-                Enter your account username or email.
-              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -67,7 +64,7 @@ export function LoginForm() {
               <FormControl>
                 <Input type="password" {...field} />
               </FormControl>
-              <FormDescription>Enter your account password.</FormDescription>
+
               <FormMessage />
             </FormItem>
           )}
