@@ -18,7 +18,7 @@ import {
 } from '@/components/ui/form'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { PasswordInput } from './password-input'
+import { PasswordInput } from '@/components/password-input'
 
 import { registerFormSchema } from '../lib/validation-schemas'
 
