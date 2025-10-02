@@ -17,12 +17,12 @@ import { Input } from "@/components/ui/input";
 
 import Link from "next/link";
 
-const FormSchema = z.object({
-  username: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
-  }),
-  password: z.string(),
-});
+const FormSchema = z
+  .object({
+    username: z.string().nonempty({ message: "Username should not be empty." }),
+    password: z.string().nonempty({ message: "Password should not be empty." }),
+  })
+  .required();
 
 export function LoginForm() {
   const form = useForm<z.infer<typeof FormSchema>>({
