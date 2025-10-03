@@ -8,14 +8,14 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
-import { registerWithMatrix } from "../lib/registration-processing";
+import { registerWithMatrix } from "../lib/registrationProcessing";
 
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { PasswordInput } from "@/components/Password-input";
+import { PasswordInput } from "@/components/PasswordInput";
 
-import { registerFormSchema } from "../lib/validation-schemas";
+import { registerFormSchema } from "../lib/validationSchemas";
 
 const formSchema = registerFormSchema;
 

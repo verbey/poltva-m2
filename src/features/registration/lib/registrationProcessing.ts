@@ -1,6 +1,6 @@
 import { createClient, MatrixError } from "matrix-js-sdk";
 import { z } from "zod";
-import { registerFormSchema } from "./validation-schemas";
+import { registerFormSchema } from "./validationSchemas";
 
 type RegisterParams = z.infer<typeof registerFormSchema>;
 

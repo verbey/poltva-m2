@@ -3,7 +3,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 
 import { LoginForm } from "@/features/login/components/LoginForm";
-import { RegisterForm } from "@/features/registration/components/Registration-form";
+import { RegisterForm } from "@/features/registration/components/RegistrationForm";
 interface AuthCardProps {
 	authType: string;
 }
