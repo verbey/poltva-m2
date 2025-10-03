@@ -1,146 +1,147 @@
-'use client'
+"use client";
 
-import Link from 'next/link'
-import { z } from 'zod'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm } from 'react-hook-form'
-import { toast } from 'sonner'
+import Link from "next/link";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 
-import { registerWithMatrix } from '../lib/registration-processing'
+import { registerWithMatrix } from "../lib/registration-processing";
 
 import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { PasswordInput } from '@/components/password-input'
+	Form,
+	FormControl,
+	FormField,
+	FormItem,
+	FormLabel,
+	FormMessage,
+} from "@/components/ui/form";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/password-input";
 
-import { registerFormSchema } from '../lib/validation-schemas'
+import { registerFormSchema } from "../lib/validation-schemas";
 
-const formSchema = registerFormSchema
+const formSchema = registerFormSchema;
 
 export function RegisterForm() {
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      username: '',
-      email: '',
-      password: '',
-      confirmPassword: '',
-    },
-  })
+	const form = useForm<z.infer<typeof formSchema>>({
+		resolver: zodResolver(formSchema),
+		defaultValues: {
+			username: "",
+			email: "",
+			password: "",
+			confirmPassword: "",
+		},
+	});
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
-    try {
-      console.log(registerWithMatrix(values, "matrix.org"))
-      toast(
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(values, null, 2)}</code>
-        </pre>,
-      )
-    } catch (error) {
-      console.error('Form submission error', error)
-      toast.error('Failed to submit the form. Please try again.')
-    }
-  }
+	async function onSubmit(values: z.infer<typeof formSchema>) {
+		try {
+			console.log(
+				registerWithMatrix(values, "synapse-local.kagutsuchi.duckdns.org")
+			);
+			toast(
+				<pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+					<code className="text-white">{JSON.stringify(values, null, 2)}</code>
+				</pre>
+			);
+		} catch (error) {
+			console.error("Form submission error", error);
+			toast.error("Failed to submit the form. Please try again.");
+		}
+	}
 
-  return (
+	return (
+		<div className="w-full max-w-sm">
+			<Form {...form}>
+				<form onSubmit={form.handleSubmit(onSubmit)}>
+					<div className="grid gap-4">
+						<FormField
+							control={form.control}
+							name="username"
+							render={({ field }) => (
+								<FormItem className="grid gap-2">
+									<FormLabel htmlFor="username">Username</FormLabel>
+									<FormControl>
+										<Input id="username" placeholder="JohnDoe" {...field} />
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
 
-      <div className="w-full max-w-sm">
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)}>
-            <div className="grid gap-4">
-              <FormField
-                control={form.control}
-                name="username"
-                render={({ field }) => (
-                  <FormItem className="grid gap-2">
-                    <FormLabel htmlFor="username">Username</FormLabel>
-                    <FormControl>
-                      <Input id="username" placeholder="JohnDoe" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+						<FormField
+							control={form.control}
+							name="email"
+							render={({ field }) => (
+								<FormItem className="grid gap-2">
+									<FormLabel htmlFor="email">Email</FormLabel>
+									<FormControl>
+										<Input
+											id="email"
+											placeholder="johndoe@mail.com"
+											type="email"
+											autoComplete="email"
+											{...field}
+										/>
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
 
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem className="grid gap-2">
-                    <FormLabel htmlFor="email">Email</FormLabel>
-                    <FormControl>
-                      <Input
-                        id="email"
-                        placeholder="johndoe@mail.com"
-                        type="email"
-                        autoComplete="email"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+						<FormField
+							control={form.control}
+							name="password"
+							render={({ field }) => (
+								<FormItem className="grid gap-2">
+									<FormLabel htmlFor="password">Password</FormLabel>
+									<FormControl>
+										<PasswordInput
+											id="password"
+											placeholder="******"
+											autoComplete="new-password"
+											{...field}
+										/>
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
 
-              <FormField
-                control={form.control}
-                name="password"
-                render={({ field }) => (
-                  <FormItem className="grid gap-2">
-                    <FormLabel htmlFor="password">Password</FormLabel>
-                    <FormControl>
-                      <PasswordInput
-                        id="password"
-                        placeholder="******"
-                        autoComplete="new-password"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+						<FormField
+							control={form.control}
+							name="confirmPassword"
+							render={({ field }) => (
+								<FormItem className="grid gap-2">
+									<FormLabel htmlFor="confirmPassword">
+										Confirm Password
+									</FormLabel>
+									<FormControl>
+										<PasswordInput
+											id="confirmPassword"
+											placeholder="******"
+											autoComplete="new-password"
+											{...field}
+										/>
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
 
-              <FormField
-                control={form.control}
-                name="confirmPassword"
-                render={({ field }) => (
-                  <FormItem className="grid gap-2">
-                    <FormLabel htmlFor="confirmPassword">
-                      Confirm Password
-                    </FormLabel>
-                    <FormControl>
-                      <PasswordInput
-                        id="confirmPassword"
-                        placeholder="******"
-                        autoComplete="new-password"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <Button type="submit" className="w-full">
-                Register
-              </Button>
-            </div>
-          </form>
-        </Form>
-        <div className="mt-4 text-center text-sm">
-          Already have an account?{' '}
-          <Link href="/auth/login" className="underline">
-            Login
-          </Link>
-        </div>
-      </div>
-  )
+						<Button type="submit" className="w-full">
+							Register
+						</Button>
+					</div>
+				</form>
+			</Form>
+			<div className="mt-4 text-center text-sm">
+				Already have an account?{" "}
+				<Link href="/auth/login" className="underline">
+					Login
+				</Link>
+			</div>
+		</div>
+	);
 }
