@@ -4,10 +4,7 @@ import { registerFormSchema } from "./validation-schemas";
 
 type RegisterParams = z.infer<typeof registerFormSchema>;
 
-export async function registerWithMatrix(
-	data: RegisterParams,
-	homeserver: string
-) {
+export async function registerWithMatrix(data: RegisterParams, homeserver: string) {
 	//string possibly temp
 	const baseUrl = `https://${homeserver}`;
 	const client = createClient({ baseUrl });

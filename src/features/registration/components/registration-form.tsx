@@ -1,5 +1,7 @@
 "use client";
 
+import ReCaptcha from "./reCaptcha";
+
 import Link from "next/link";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -8,14 +10,7 @@ import { toast } from "sonner";
 
 import { registerWithMatrix } from "../lib/registration-processing";
 
-import {
-	Form,
-	FormControl,
-	FormField,
-	FormItem,
-	FormLabel,
-	FormMessage,
-} from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { PasswordInput } from "@/components/password-input";
@@ -37,9 +32,7 @@ export function RegisterForm() {
 
 	async function onSubmit(values: z.infer<typeof formSchema>) {
 		try {
-			console.log(
-				registerWithMatrix(values, "synapse-local.kagutsuchi.duckdns.org")
-			);
+			console.log(registerWithMatrix(values, "synapse-local.kagutsuchi.duckdns.org"));
 			toast(
 				<pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
 					<code className="text-white">{JSON.stringify(values, null, 2)}</code>
@@ -77,13 +70,7 @@ export function RegisterForm() {
 								<FormItem className="grid gap-2">
 									<FormLabel htmlFor="email">Email</FormLabel>
 									<FormControl>
-										<Input
-											id="email"
-											placeholder="johndoe@mail.com"
-											type="email"
-											autoComplete="email"
-											{...field}
-										/>
+										<Input id="email" placeholder="johndoe@mail.com" type="email" autoComplete="email" {...field} />
 									</FormControl>
 									<FormMessage />
 								</FormItem>
@@ -97,12 +84,7 @@ export function RegisterForm() {
 								<FormItem className="grid gap-2">
 									<FormLabel htmlFor="password">Password</FormLabel>
 									<FormControl>
-										<PasswordInput
-											id="password"
-											placeholder="******"
-											autoComplete="new-password"
-											{...field}
-										/>
+										<PasswordInput id="password" placeholder="******" autoComplete="new-password" {...field} />
 									</FormControl>
 									<FormMessage />
 								</FormItem>
@@ -114,16 +96,9 @@ export function RegisterForm() {
 							name="confirmPassword"
 							render={({ field }) => (
 								<FormItem className="grid gap-2">
-									<FormLabel htmlFor="confirmPassword">
-										Confirm Password
-									</FormLabel>
+									<FormLabel htmlFor="confirmPassword">Confirm Password</FormLabel>
 									<FormControl>
-										<PasswordInput
-											id="confirmPassword"
-											placeholder="******"
-											autoComplete="new-password"
-											{...field}
-										/>
+										<PasswordInput id="confirmPassword" placeholder="******" autoComplete="new-password" {...field} />
 									</FormControl>
 									<FormMessage />
 								</FormItem>
@@ -142,6 +117,7 @@ export function RegisterForm() {
 					Login
 				</Link>
 			</div>
+			<ReCaptcha />
 		</div>
 	);
 }
