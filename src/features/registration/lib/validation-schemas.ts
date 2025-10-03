@@ -1,7 +1,7 @@
 import { z } from "zod";
 
-const urlRegex =
-	/^((ftp|http|https):\/\/)?([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(:\d+)?(\/\S*)?$/;
+// const urlRegex =
+// 	/^((ftp|http|https):\/\/)?([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(:\d+)?(\/\S*)?$/;
 
 export const registerFormSchema = z
 	.object({
