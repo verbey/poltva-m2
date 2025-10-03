@@ -1,6 +1,6 @@
 "use client";
 
-import ReCaptcha from "./reCaptcha";
+import ReCaptcha from "./ReCaptcha";
 
 import Link from "next/link";
 import { z } from "zod";
@@ -13,7 +13,7 @@ import { registerWithMatrix } from "../lib/registration-processing";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { PasswordInput } from "@/components/password-input";
+import { PasswordInput } from "@/components/Password-input";
 
 import { registerFormSchema } from "../lib/validation-schemas";
 
