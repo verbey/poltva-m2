@@ -1,8 +1,6 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
+import useLoginForm from "../hooks/useLoginForm";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -17,25 +15,8 @@ import { Input } from "@/components/ui/input";
 
 import Link from "next/link";
 
-const FormSchema = z
-  .object({
-    username: z.string().nonempty({ message: "Username should not be empty." }),
-    password: z.string().nonempty({ message: "Password should not be empty." }),
-  })
-  .required();
-
 export function LoginForm() {
-  const form = useForm<z.infer<typeof FormSchema>>({
-    resolver: zodResolver(FormSchema),
-    defaultValues: {
-      username: "",
-      password: "",
-    },
-  });
-
-  function onSubmit(data: z.infer<typeof FormSchema>) {
-    console.log(data);
-  }
+  const { form, onSubmit } = useLoginForm();
 
   return (
     <Form {...form}>
