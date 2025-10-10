@@ -24,25 +24,28 @@ import React from "react";
 export function HomeserverValidator() {
 	const [isInvalid, setIsInvalid] = React.useState(false);
 	const [value, setValue] = React.useState("matrix.org");
+	const debounceTimeout = React.useRef<NodeJS.Timeout | null>(null);
 
-	const handleBlur = async (e: React.FocusEvent<HTMLInputElement>) => {
-		const val = e.target.value;
-		setValue(val);
-		const valid = await validateHomeserver(val);
-		setIsInvalid(!valid);
-	};
+	React.useEffect(() => {
+		if (debounceTimeout.current) {
+			clearTimeout(debounceTimeout.current);
+		}
+		debounceTimeout.current = setTimeout(async () => {
+			if (value) {
+				const valid = await validateHomeserver(value);
+				setIsInvalid(!valid);
+			}
+		}, 500);
+		return () => {
+			if (debounceTimeout.current) {
+				clearTimeout(debounceTimeout.current);
+			}
+		};
+	}, [value]);
 
 	return (
 		<div>
-			<Input
-				id="homeserver"
-				type="text"
-				placeholder="matrix.org"
-				value={value}
-				aria-invalid={isInvalid}
-				onChange={(e) => setValue(e.target.value)}
-				onBlur={handleBlur}
-			/>
+			<Input id="homeserver" type="text" placeholder="matrix.org" value={value} aria-invalid={isInvalid} onChange={(e) => setValue(e.target.value)} />
 			{isInvalid && <span className="text-destructive text-sm mt-1 block">Invalid homeserver URL</span>}
 		</div>
 	);
