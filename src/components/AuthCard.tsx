@@ -1,7 +1,4 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-
-import { HomeserverValidator } from "./HomeserverInput";
 
 import { LoginForm } from "@/features/login/components/LoginForm";
 import { RegisterForm } from "@/features/registration/components/RegistrationForm";
@@ -18,10 +15,6 @@ export default function AuthCard(props: AuthCardProps) {
 			</CardHeader>
 
 			<CardContent className="flex flex-col gap-2 sm:w-3/4 w-9/10">
-				<div className="flex flex-col gap-2">
-					<Label htmlFor="homeserver">Homeserver</Label>
-					<HomeserverValidator />
-				</div>
 				{props.authType === "login" && <LoginForm />}
 				{props.authType === "register" && <RegisterForm />}
 			</CardContent>
