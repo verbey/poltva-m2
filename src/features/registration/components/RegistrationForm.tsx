@@ -1,62 +1,38 @@
 "use client";
 
-import ReCaptcha from "./ReCaptcha";
-
-import Link from "next/link";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
-
-import { registerWithMatrix } from "../lib/registrationProcessing";
-
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { PasswordInput } from "@/components/PasswordInput";
-import { Label } from "@/components/ui/label";
-import { HomeserverValidator } from "@/components/HomeserverInput";
 
-import { registerFormSchema } from "../lib/validationSchemas";
+import Link from "next/link";
 
-const formSchema = registerFormSchema;
+import ReCaptcha from "./ReCaptcha";
+
+import { useRegistrationForm } from "../hooks/useRegisrationForm";
 
 export function RegisterForm() {
-	const form = useForm<z.infer<typeof formSchema>>({
-		resolver: zodResolver(formSchema),
-		defaultValues: {
-			username: "",
-			email: "",
-			password: "",
-			confirmPassword: "",
-		},
-	});
-
-	async function onSubmit(values: z.infer<typeof formSchema>) {
-		try {
-			console.log(registerWithMatrix(values, "synapse-local.kagutsuchi.duckdns.org"));
-			toast(
-				<pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-					<code className="text-white">{JSON.stringify(values, null, 2)}</code>
-				</pre>
-			);
-		} catch (error) {
-			console.error("Form submission error", error);
-			toast.error("Failed to submit the form. Please try again.");
-		}
-	}
+	const { form, onSubmit } = useRegistrationForm();
 
 	return (
 		<div className="w-full max-w-sm">
 			<Form {...form}>
 				<form onSubmit={form.handleSubmit(onSubmit)}>
 					<div className="grid gap-4">
-						{/* TEMP */}
-						<div className="flex flex-col gap-2">
-							<Label htmlFor="homeserver">Homeserver</Label>
-							<HomeserverValidator />
-						</div>
-						{/* TEMP */}
+						<FormField
+							control={form.control}
+							name="homeserver"
+							render={({ field }) => (
+								<FormItem className="grid gap-2">
+									<FormLabel htmlFor="homeserver">Homeserver</FormLabel>
+									<FormControl>
+										<Input id="homeserver" placeholder="matrix.org" {...field} />
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+
 						<FormField
 							control={form.control}
 							name="username"
