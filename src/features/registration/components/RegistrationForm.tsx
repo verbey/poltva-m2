@@ -7,8 +7,6 @@ import { PasswordInput } from "@/components/PasswordInput";
 
 import Link from "next/link";
 
-import ReCaptcha from "./ReCaptcha";
-
 import { useRegistrationForm } from "../hooks/useRegisrationForm";
 
 export function RegisterForm() {
@@ -101,7 +99,6 @@ export function RegisterForm() {
 					Login
 				</Link>
 			</div>
-			<ReCaptcha />
 		</div>
 	);
 }
