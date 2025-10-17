@@ -6,7 +6,6 @@ interface SessionStore {
   clientData: ICreateClientOpts[];
   addClientData: (newClientData: ICreateClientOpts) => void;
   activeClientIndex: number;
-  setActiveClientIndex: (newActiveClientUserId: string) => void;
   activeClient: MatrixClient | null;
   setActiveClient: (newActiveClient: MatrixClient) => void;
 }
@@ -20,13 +19,6 @@ const useSessionStore = create<SessionStore>()(
           clientData: [...state.clientData, newClientData],
         })),
       activeClientIndex: 0,
-      setActiveClientIndex: (newActiveClientUserId) => {
-        set((state) => ({
-          activeClientIndex: state.clientData.findIndex(
-            (MatrixClient) => MatrixClient.userId === newActiveClientUserId
-          ),
-        }));
-      },
       activeClient: null,
       setActiveClient: (newActiveClient) => {
         set((state) => ({
