@@ -1,25 +1,39 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { ICreateClientOpts } from "matrix-js-sdk";
+import { ICreateClientOpts, MatrixClient } from "matrix-js-sdk";
 
 interface SessionStore {
   clientData: ICreateClientOpts[];
+  addClientData: (newClientData: ICreateClientOpts) => void;
   activeClientIndex: number;
+  setActiveClientIndex: (newActiveClientUserId: string) => void;
+  activeClient: MatrixClient | null;
+  setActiveClient: (newActiveClient: MatrixClient) => void;
 }
 
 const useSessionStore = create<SessionStore>()(
   persist(
     (set) => ({
       clientData: [],
-      addClientData: (newClientData: ICreateClientOpts) =>
+      addClientData: (newClientData) =>
         set((state) => ({
           clientData: [...state.clientData, newClientData],
         })),
       activeClientIndex: 0,
-      setActiveClientIndex: (newActiveClientUserId: string) => {
+      setActiveClientIndex: (newActiveClientUserId) => {
         set((state) => ({
           activeClientIndex: state.clientData.findIndex(
             (MatrixClient) => MatrixClient.userId === newActiveClientUserId
+          ),
+        }));
+      },
+      activeClient: null,
+      setActiveClient: (newActiveClient) => {
+        set((state) => ({
+          activeClient: newActiveClient,
+          activeClientIndex: state.clientData.findIndex(
+            (MatrixClient) =>
+              MatrixClient.userId === (newActiveClient.getUserId() ?? undefined)
           ),
         }));
       },
