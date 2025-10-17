@@ -1,5 +1,5 @@
 import { toast } from "sonner";
 
-export function showSubmitErrorToast() {
-	toast.error("Failed to submit the form. Please try again.");
+export function showSubmitErrorToast(message?: string) {
+	toast.error(message || "An error occurred during registration. Please try again.");
 }
