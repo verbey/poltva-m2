@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -21,6 +21,18 @@ export function useRegistrationForm() {
 			homeserver: "matrix.org",
 		},
 	});
+
+	const { watch, trigger, formState } = form;
+	const homeserverValue = watch("homeserver");
+	const wasTouched = formState.touchedFields.homeserver;
+	useEffect(() => {
+		if (!wasTouched) return;
+		const timer = setTimeout(() => {
+			trigger("homeserver");
+		}, 500);
+
+		return () => clearTimeout(timer);
+	}, [homeserverValue, trigger, wasTouched]);
 
 	async function onSubmit(values: z.infer<typeof registerFormSchema>) {
 		setIsLoading(true);
@@ -65,7 +77,9 @@ export function useRegistrationForm() {
 				} else {
 					showSubmitErrorToast("Server has no available registration flows.");
 				}
-			} else showSubmitErrorToast("Could not connect to the homeserver to get registration info.");
+			} else {
+				showSubmitErrorToast("Could not connect to the homeserver to get registration info.");
+			}
 		} finally {
 			setIsLoading(false);
 		}
