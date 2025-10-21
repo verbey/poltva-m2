@@ -1,5 +1,6 @@
 "use client";
 
+import PasswordInput from "@/components/PasswordInput";
 import useLoginForm from "../hooks/useLoginForm";
 
 import { Button } from "@/components/ui/button";
@@ -29,7 +30,7 @@ export function LoginForm() {
           name="username"
           render={({ field }) => (
             <FormItem className="m-0">
-              <FormLabel>Username</FormLabel>
+              <FormLabel htmlFor="username">Username</FormLabel>
               <FormControl>
                 <Input {...field} />
               </FormControl>
@@ -42,11 +43,10 @@ export function LoginForm() {
           name="password"
           render={({ field }) => (
             <FormItem className="m-0">
-              <FormLabel>Password</FormLabel>
+              <FormLabel htmlFor="password">Password</FormLabel>
               <FormControl>
-                <Input type="password" {...field} />
+                <PasswordInput {...field} />
               </FormControl>
-
               <FormMessage />
             </FormItem>
           )}
