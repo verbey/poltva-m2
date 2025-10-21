@@ -25,14 +25,41 @@ export function useRegistrationForm() {
 	const { watch, trigger } = form;
 	const homeserverValue = watch("homeserver");
 	useEffect(() => {
+		async function fetchAuthFlows() {
+			setIsLoading(true);
+			const values = form.getValues();
+			console.log("Fetching auth flows for homeserver:", values.homeserver);
+			const client = createClient({ baseUrl: `https://${values.homeserver}` });
+			try {
+				const flows = await client.registerRequest({});
+				console.log("Available registration flows:", flows);
+			} catch (error) {
+				if (error instanceof MatrixError && error.httpStatus === 401 && error.data) {
+					const IAuthData = error.data as IAuthData;
+					if (IAuthData.flows && IAuthData.flows.length > 0) {
+						setAvailableFlows(IAuthData.flows.flatMap((flow) => flow.stages)); // Не до конца понял этот момент, надо бы перечитать доку
+						console.log("Available registration flows:", IAuthData.flows);
+					} else {
+						showSubmitErrorToast("Server has no available registration flows.");
+					}
+				} else {
+					showSubmitErrorToast("Could not connect to the homeserver to get registration info.");
+				}
+			} finally {
+				setIsLoading(false);
+			}
+		}
+
 		const timer = setTimeout(() => {
 			trigger("homeserver");
+			fetchAuthFlows();
 		}, 500);
 
 		return () => clearTimeout(timer);
-	}, [homeserverValue, trigger]);
+	}, [homeserverValue, trigger, form]);
 
 	async function onSubmit(values: z.infer<typeof registerFormSchema>) {
+		console.log("Submitting registration for homeserver:", values.homeserver);
 		setIsLoading(true);
 		const client = createClient({ baseUrl: `https://${values.homeserver}` });
 
@@ -50,33 +77,12 @@ export function useRegistrationForm() {
 		} catch (error) {
 			if (error instanceof MatrixError && error.httpStatus === 401 && error.data) {
 				const uiaData = error.data as IAuthData;
+				console.log("Registration requires additional authentication.", uiaData);
 				const nextStage = uiaData.flows?.flatMap((flow) => flow.stages ?? []).find((stage) => !(uiaData.completed ?? []).includes(stage));
+				console.log("Next required stage:", nextStage);
 				setCurrentStage(nextStage || null);
 			} else {
-				showSubmitErrorToast("Server has no available registration flows.");
-			}
-		} finally {
-			setIsLoading(false);
-		}
-	}
-
-	async function fetchAuthFlows() {
-		setIsLoading(true);
-		const values = form.getValues();
-		const client = createClient({ baseUrl: `https://${values.homeserver}` });
-		try {
-			const flows = await client.registerRequest({});
-			console.log("Available registration flows:", flows);
-		} catch (error) {
-			if (error instanceof MatrixError && error.httpStatus === 401 && error.data) {
-				const IAuthData = error.data as IAuthData;
-				if (IAuthData.flows && IAuthData.flows.length > 0) {
-					setAvailableFlows(IAuthData.flows.flatMap((flow) => flow.stages)); // Не до конца понял этот момент, надо бы перечитать доку
-				} else {
-					showSubmitErrorToast("Server has no available registration flows.");
-				}
-			} else {
-				showSubmitErrorToast("Could not connect to the homeserver to get registration info.");
+				console.log("Server has no available registration flows.", error);
 			}
 		} finally {
 			setIsLoading(false);
@@ -86,7 +92,6 @@ export function useRegistrationForm() {
 	return {
 		form,
 		onSubmit,
-		fetchAuthFlows,
 		isLoading,
 		currentStage,
 		availableFlows,
