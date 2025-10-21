@@ -50,9 +50,31 @@ export function useRegistrationForm() {
 		}
 	}
 
+	async function fetchAuthFlows() {
+		setIsLoading(true);
+		const values = form.getValues();
+		const client = createClient({ baseUrl: `https://${values.homeserver}` });
+		try {
+			const flows = await client.registerRequest({});
+			console.log("Available registration flows:", flows);
+		} catch (error) {
+			if (error instanceof MatrixError && error.httpStatus === 401 && error.data) {
+				const IAuthData = error.data as IAuthData;
+				if (IAuthData.flows && IAuthData.flows.length > 0) {
+					setAvailableFlows(IAuthData.flows.flatMap((flow) => flow.stages)); // Не до конца понял этот момент, надо бы перечитать доку
+				} else {
+					showSubmitErrorToast("Server has no available registration flows.");
+				}
+			} else showSubmitErrorToast("Could not connect to the homeserver to get registration info.");
+		} finally {
+			setIsLoading(false);
+		}
+	}
+
 	return {
 		form,
 		onSubmit,
+		fetchAuthFlows,
 		isLoading,
 		currentStage,
 		availableFlows,
