@@ -3,7 +3,7 @@ export default async function validateHomeserver(homeserver: string): Promise<bo
 		return false;
 	}
 	try {
-		const response = await fetch(`https://${homeserver}/.well-known/matrix/server`, {
+		const response = await fetch(`https://${homeserver}/.well-known/matrix/client`, {
 			method: "GET",
 			mode: "cors",
 		});
