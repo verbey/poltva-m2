@@ -37,8 +37,11 @@ export function useRegistrationForm() {
 				if (error instanceof MatrixError && error.httpStatus === 401 && error.data) {
 					const IAuthData = error.data as IAuthData;
 					if (IAuthData.flows && IAuthData.flows.length > 0) {
-						setAvailableFlows(IAuthData.flows.flatMap((flow) => flow.stages)); // Не до конца понял этот момент, надо бы перечитать доку
-						console.log("Available registration flows:", IAuthData.flows);
+						setAvailableFlows(IAuthData.flows.flatMap((flow) => flow.stages));
+						console.log("Available registration flows:");
+						availableFlows.forEach((flow) => {
+							console.log(flow);
+						});
 					} else {
 						showSubmitErrorToast("Server has no available registration flows.");
 					}
