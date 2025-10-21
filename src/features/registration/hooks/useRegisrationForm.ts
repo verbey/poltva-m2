@@ -22,17 +22,15 @@ export function useRegistrationForm() {
 		},
 	});
 
-	const { watch, trigger, formState } = form;
+	const { watch, trigger } = form;
 	const homeserverValue = watch("homeserver");
-	const wasTouched = formState.touchedFields.homeserver;
 	useEffect(() => {
-		if (!wasTouched) return;
 		const timer = setTimeout(() => {
 			trigger("homeserver");
 		}, 500);
 
 		return () => clearTimeout(timer);
-	}, [homeserverValue, trigger, wasTouched]);
+	}, [homeserverValue, trigger]);
 
 	async function onSubmit(values: z.infer<typeof registerFormSchema>) {
 		setIsLoading(true);
