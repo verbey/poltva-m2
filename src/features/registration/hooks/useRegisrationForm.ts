@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { MatrixError, createClient, RegisterRequest, IAuthData } from "matrix-js-sdk";
 import { registerFormSchema } from "../lib/validationSchemas";
-import { showSubmitErrorToast } from "../components/SubmitErrorToast";
+// import { showSubmitErrorToast } from "../components/SubmitErrorToast";
 
 export function useRegistrationForm() {
 	const [isLoading, setIsLoading] = useState(false);
@@ -38,15 +38,12 @@ export function useRegistrationForm() {
 					const IAuthData = error.data as IAuthData;
 					if (IAuthData.flows && IAuthData.flows.length > 0) {
 						setAvailableFlows(IAuthData.flows.flatMap((flow) => flow.stages));
-						console.log("Available registration flows:");
-						availableFlows.forEach((flow) => {
-							console.log(flow);
-						});
+						console.log("Available registration flows:", availableFlows.join(", "));
 					} else {
-						showSubmitErrorToast("Server has no available registration flows.");
+						console.log("Server has no available registration flows.");
 					}
 				} else {
-					showSubmitErrorToast("Could not connect to the homeserver to get registration info.");
+					console.log("Could not connect to the homeserver to get registration info.");
 				}
 			} finally {
 				setIsLoading(false);
