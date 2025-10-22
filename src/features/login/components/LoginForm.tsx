@@ -27,6 +27,19 @@ export function LoginForm() {
       >
         <FormField
           control={form.control}
+          name="homeserver"
+          render={({ field }) => (
+            <FormItem className="m-0">
+              <FormLabel htmlFor="homeserver">Homeserver</FormLabel>
+              <FormControl>
+                <Input {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
           name="username"
           render={({ field }) => (
             <FormItem className="m-0">

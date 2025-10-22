@@ -5,8 +5,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
 
 import { LoginForm } from "@/features/login/components/LoginForm";
 
@@ -25,15 +23,6 @@ export default function AuthCard(props: AuthCardProps) {
       </CardHeader>
 
       <CardContent className="flex flex-col gap-2 sm:w-3/4 w-9/10">
-        <div className="flex flex-col gap-2">
-          <Label htmlFor="homeserver">Homeserver</Label>
-          <Input
-            id="homeserver"
-            type="text"
-            placeholder="matrix.org"
-            defaultValue="matrix.org"
-          />
-        </div>
         {props.authType === "login" && <LoginForm />}
       </CardContent>
     </Card>
