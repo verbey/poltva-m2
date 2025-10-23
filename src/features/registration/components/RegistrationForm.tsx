@@ -4,13 +4,14 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { PasswordInput } from "@/components/PasswordInput";
+import { Spinner } from "@/components/ui/spinner";
 
 import Link from "next/link";
 
 import { useRegistrationForm } from "../hooks/useRegisrationForm";
 
 export function RegisterForm() {
-	const { form, onSubmit, availableFlows } = useRegistrationForm();
+	const { form, onSubmit, availableFlows, isLoading, isValidating, isSubmitting } = useRegistrationForm();
 
 	return (
 		<div className="w-full max-w-sm">
@@ -24,7 +25,10 @@ export function RegisterForm() {
 								<FormItem className="grid gap-2">
 									<FormLabel htmlFor="homeserver">Homeserver</FormLabel>
 									<FormControl>
-										<Input id="homeserver" placeholder="matrix.org" {...field} />
+										<div className="flex items-center gap-2">
+											<Input id="homeserver" placeholder="matrix.org" {...field} />
+											{isValidating && <Spinner className="h-4 w-4" />}
+										</div>
 									</FormControl>
 									<FormMessage />
 								</FormItem>
@@ -39,7 +43,7 @@ export function RegisterForm() {
 										<FormItem className="grid gap-2">
 											<FormLabel htmlFor="username">Username</FormLabel>
 											<FormControl>
-												<Input id="username" placeholder="JohnDoe" {...field} />
+												<Input id="username" placeholder="JohnDoe" {...field} disabled={isLoading} />
 											</FormControl>
 											<FormMessage />
 										</FormItem>
@@ -53,7 +57,7 @@ export function RegisterForm() {
 											<FormItem className="grid gap-2">
 												<FormLabel htmlFor="email">Email</FormLabel>
 												<FormControl>
-													<Input id="email" placeholder="johndoe@mail.com" type="email" autoComplete="email" {...field} />
+													<Input id="email" placeholder="johndoe@mail.com" type="email" autoComplete="email" {...field} disabled={isLoading} />
 												</FormControl>
 												<FormMessage />
 											</FormItem>
@@ -67,7 +71,7 @@ export function RegisterForm() {
 										<FormItem className="grid gap-2">
 											<FormLabel htmlFor="password">Password</FormLabel>
 											<FormControl>
-												<PasswordInput id="password" placeholder="******" autoComplete="new-password" {...field} />
+												<PasswordInput id="password" placeholder="******" autoComplete="new-password" {...field} disabled={isLoading} />
 											</FormControl>
 											<FormMessage />
 										</FormItem>
@@ -81,7 +85,7 @@ export function RegisterForm() {
 										<FormItem className="grid gap-2">
 											<FormLabel htmlFor="confirmPassword">Confirm Password</FormLabel>
 											<FormControl>
-												<PasswordInput id="confirmPassword" placeholder="******" autoComplete="new-password" {...field} />
+												<PasswordInput id="confirmPassword" placeholder="******" autoComplete="new-password" {...field} disabled={isLoading} />
 											</FormControl>
 											<FormMessage />
 										</FormItem>
@@ -89,7 +93,8 @@ export function RegisterForm() {
 								/>
 							</div>
 						)}
-						<Button type="submit" className="w-full">
+						<Button type="submit" className="w-full" disabled={isLoading}>
+							{isSubmitting && <Spinner className="mr-2 h-4 w-4" />}
 							Register
 						</Button>
 					</div>

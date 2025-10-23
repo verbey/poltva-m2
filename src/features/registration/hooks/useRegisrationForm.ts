@@ -7,9 +7,12 @@ import { registerFormSchema } from "../lib/validationSchemas";
 // import { showSubmitErrorToast } from "../components/SubmitErrorToast";
 
 export function useRegistrationForm() {
-	const [isLoading, setIsLoading] = useState(false);
+	const [isValidating, setIsValidating] = useState(false);
+	const [isSubmitting, setIsSubmitting] = useState(false);
+	const isLoading = isValidating || isSubmitting;
+
 	const [currentStage, setCurrentStage] = useState<string | null>(null);
-	const [availableFlows, setAvailableFlows] = useState<string[]>([]); //hz
+	const [availableFlows, setAvailableFlows] = useState<string[]>([]);
 
 	const form = useForm<z.infer<typeof registerFormSchema>>({
 		resolver: zodResolver(registerFormSchema),
@@ -21,12 +24,11 @@ export function useRegistrationForm() {
 			homeserver: "matrix.org",
 		},
 	});
-
 	const { watch, trigger } = form;
 	const homeserverValue = watch("homeserver");
 	useEffect(() => {
 		async function fetchAuthFlows() {
-			setIsLoading(true);
+			setIsValidating(true);
 			const values = form.getValues();
 			console.log("Fetching auth flows for homeserver:", values.homeserver);
 			const client = createClient({ baseUrl: `https://${values.homeserver}` });
@@ -46,7 +48,7 @@ export function useRegistrationForm() {
 					console.log("Could not connect to the homeserver to get registration info.");
 				}
 			} finally {
-				setIsLoading(false);
+				setIsValidating(false);
 			}
 		}
 
@@ -60,7 +62,7 @@ export function useRegistrationForm() {
 
 	async function onSubmit(values: z.infer<typeof registerFormSchema>) {
 		console.log("Submitting registration for homeserver:", values.homeserver);
-		setIsLoading(true);
+		setIsSubmitting(true);
 		const client = createClient({ baseUrl: `https://${values.homeserver}` });
 
 		const registrationData: RegisterRequest = {
@@ -85,7 +87,7 @@ export function useRegistrationForm() {
 				console.log("Server has no available registration flows.", error);
 			}
 		} finally {
-			setIsLoading(false);
+			setIsSubmitting(false);
 		}
 	}
 
@@ -93,6 +95,8 @@ export function useRegistrationForm() {
 		form,
 		onSubmit,
 		isLoading,
+		isValidating,
+		isSubmitting,
 		currentStage,
 		availableFlows,
 	};
