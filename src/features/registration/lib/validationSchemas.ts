@@ -14,6 +14,7 @@ export const registerFormSchema = z
 			message: "Username must be at least 3 characters long.",
 		}),
 		email: z.email("Enter a valid email address").optional(),
+		registration_token: z.string().optional(),
 		//email: z.email("Enter a valid email address").optional().or(z.literal("")) ?,
 		password: z
 			.string()

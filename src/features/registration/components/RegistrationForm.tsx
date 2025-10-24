@@ -34,7 +34,9 @@ export function RegisterForm() {
 								</FormItem>
 							)}
 						/>
-						{availableFlows.includes("m.login.dummy") && (
+						{(availableFlows.includes("m.login.dummy") ||
+							availableFlows.includes("m.login.email.identity") ||
+							availableFlows.includes("m.login.registration_token")) && (
 							<div className="grid gap-2 mt-2">
 								<FormField
 									control={form.control}
@@ -58,6 +60,21 @@ export function RegisterForm() {
 												<FormLabel htmlFor="email">Email</FormLabel>
 												<FormControl>
 													<Input id="email" placeholder="johndoe@mail.com" type="email" autoComplete="email" {...field} disabled={isLoading} />
+												</FormControl>
+												<FormMessage />
+											</FormItem>
+										)}
+									/>
+								)}
+								{availableFlows.includes("m.login.registration_token") && (
+									<FormField
+										control={form.control}
+										name="registration_token"
+										render={({ field }) => (
+											<FormItem className="grid gap-2">
+												<FormLabel htmlFor="registration_token">Registration Token</FormLabel>
+												<FormControl>
+													<Input id="registration_token" placeholder="Token" {...field} disabled={isLoading} />
 												</FormControl>
 												<FormMessage />
 											</FormItem>
