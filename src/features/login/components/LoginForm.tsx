@@ -16,28 +16,29 @@ import { Input } from "@/components/ui/input";
 
 import Link from "next/link";
 
-export function LoginForm() {
-  const { form, onSubmit } = useLoginForm();
+interface LoginFormProps {
+  homeserver: string;
+  isHsValid: boolean | null;
+  isHsLoading: boolean;
+  isHsError: boolean;
+  canSubmit: boolean;
+}
+
+export function LoginForm(props: LoginFormProps) {
+  const { form, handleSubmit, blocked } = useLoginForm({
+    homeserver: props.homeserver,
+    canSubmit: props.canSubmit,
+    isHsLoading: props.isHsLoading,
+    isHsError: props.isHsError,
+    isHsValid: props.isHsValid,
+  });
 
   return (
     <Form {...form}>
       <form
-        onSubmit={form.handleSubmit(onSubmit)}
+        onSubmit={handleSubmit}
         className="w-full space-y-6 flex flex-col gap-2"
       >
-        <FormField
-          control={form.control}
-          name="homeserver"
-          render={({ field }) => (
-            <FormItem className="m-0">
-              <FormLabel htmlFor="homeserver">Homeserver</FormLabel>
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
         <FormField
           control={form.control}
           name="username"
@@ -64,7 +65,9 @@ export function LoginForm() {
             </FormItem>
           )}
         />
-        <Button type="submit">Submit</Button>
+        <Button type="submit" disabled={blocked}>
+          Submit
+        </Button>
       </form>
       <div className="mt-4 text-center text-sm">
         Don&apos;t have an account?{" "}
