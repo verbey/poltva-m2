@@ -4,6 +4,7 @@ import createMatrixClient from "@/lib/matrix/createMatrixClient";
 import useSessionStore from "@/stores/useSessionStore";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 type UseLoginFormOptions = {
   homeserver?: string;
@@ -14,6 +15,7 @@ type UseLoginFormOptions = {
 };
 
 function useLoginForm(options: UseLoginFormOptions = {}) {
+  const router = useRouter();
   const { homeserver, canSubmit, isHsLoading, isHsError, isHsValid } = options;
 
   const FormSchema = z
@@ -69,6 +71,7 @@ function useLoginForm(options: UseLoginFormOptions = {}) {
         refreshToken: client.getRefreshToken() ?? undefined,
       });
       setActiveClient(client);
+      router.push("/home");
     } catch (error) {
       console.error("Login error:", error);
       setSubmitError(
