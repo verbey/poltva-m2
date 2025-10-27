@@ -25,7 +25,7 @@ interface LoginFormProps {
 }
 
 export function LoginForm(props: LoginFormProps) {
-  const { form, handleSubmit, blocked } = useLoginForm({
+  const { form, handleSubmit, blocked, submitError } = useLoginForm({
     homeserver: props.homeserver,
     canSubmit: props.canSubmit,
     isHsLoading: props.isHsLoading,
@@ -68,6 +68,10 @@ export function LoginForm(props: LoginFormProps) {
         <Button type="submit" disabled={blocked}>
           Submit
         </Button>
+
+        {submitError ? (
+          <div className="mt-2 text-sm text-red-600">{submitError}</div>
+        ) : null}
       </form>
       <div className="mt-4 text-center text-sm">
         Don&apos;t have an account?{" "}
