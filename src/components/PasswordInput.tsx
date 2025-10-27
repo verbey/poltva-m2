@@ -8,14 +8,15 @@ import { cn } from "@/lib/utils";
 
 const PasswordInput = (props: React.ComponentProps<typeof Input>) => {
   const [showPassword, setShowPassword] = useState(false);
+  const { className, ...rest } = props;
 
   return (
     <div className="relative">
       <Input
         type={showPassword ? "text" : "password"}
-        className={cn("pr-10", props.className)}
+        className={cn("pr-10", className)}
         ref={props.ref}
-        {...props}
+        {...rest}
       />
       <Button
         type="button"
