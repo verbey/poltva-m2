@@ -9,8 +9,8 @@ import {
 } from "@/components/ui/card";
 
 import { LoginForm } from "@/features/login/components/LoginForm";
-import HomeserverValidator from "./HomeserverValidator";
-import useAuthCard from "@/hooks/useAuthCard";
+import HomeserverValidator from "../HomeserverValidator/HomeserverValidator";
+import useAuthCard from "@/hooks/useAuthCard/useAuthCard";
 
 interface AuthCardProps {
   authType: string;

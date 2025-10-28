@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import { render, screen, cleanup } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import PasswordInput from "../../components/PasswordInput";
+import PasswordInput from "./PasswordInput";
 
 afterEach(() => cleanup());
 

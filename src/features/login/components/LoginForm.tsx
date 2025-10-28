@@ -1,6 +1,6 @@
 "use client";
 
-import PasswordInput from "@/components/PasswordInput";
+import PasswordInput from "@/components/PasswordInput/PasswordInput";
 import useLoginForm from "../hooks/useLoginForm";
 
 import { Button } from "@/components/ui/button";
