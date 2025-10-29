@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import validateHomeserver from "@/lib/matrix/validateHomeserver";
 
-function useDebouncedValue<T>(value: T, delay = 500) {
+export function useDebouncedValue<T>(value: T, delay = 500) {
   const [debounced, setDebounced] = useState(value);
   useEffect(() => {
     const t = setTimeout(() => setDebounced(value), delay);
