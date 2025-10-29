@@ -24,7 +24,7 @@ interface LoginFormProps {
   canSubmit: boolean;
 }
 
-export function LoginForm(props: LoginFormProps) {
+function LoginForm(props: LoginFormProps) {
   const { form, handleSubmit, blocked, submitError } = useLoginForm({
     homeserver: props.homeserver,
     canSubmit: props.canSubmit,
@@ -44,7 +44,7 @@ export function LoginForm(props: LoginFormProps) {
           name="username"
           render={({ field }) => (
             <FormItem className="m-0">
-              <FormLabel htmlFor="username">Username</FormLabel>
+              <FormLabel>Username</FormLabel>
               <FormControl>
                 <Input {...field} />
               </FormControl>
@@ -57,7 +57,7 @@ export function LoginForm(props: LoginFormProps) {
           name="password"
           render={({ field }) => (
             <FormItem className="m-0">
-              <FormLabel htmlFor="password">Password</FormLabel>
+              <FormLabel>Password</FormLabel>
               <FormControl>
                 <PasswordInput {...field} />
               </FormControl>
@@ -82,3 +82,5 @@ export function LoginForm(props: LoginFormProps) {
     </Form>
   );
 }
+
+export default LoginForm;
