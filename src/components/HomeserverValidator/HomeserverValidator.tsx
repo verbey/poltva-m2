@@ -3,36 +3,8 @@
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
-
-interface HomeserverValidatorProps {
-  value: string;
-  onChange: (value: string) => void;
-  isLoading: boolean;
-  isError: boolean;
-  isValid: boolean | null;
-  errorMessage?: string | null;
-}
-
-export function useHomeserverValidationStatus(props: HomeserverValidatorProps) {
-  const { value, isLoading, isError, isValid, errorMessage } = props;
-
-  let statusText: string | null = null;
-  let statusClass = "text-muted-foreground";
-
-  if (value) {
-    if (isLoading) {
-      statusText = "Validating homeserver…";
-    } else if (isError || isValid === false) {
-      statusText = errorMessage ?? "Invalid homeserver URL";
-      statusClass = "text-destructive";
-    } else if (isValid === true) {
-      statusText = "Homeserver looks good";
-      statusClass = "text-green-600 dark:text-green-500";
-    }
-  }
-
-  return { statusText, statusClass };
-}
+import useHomeserverValidationStatus from "@/hooks/useHomeserverValidationStatus/useHomeserverValidationStatus";
+import HomeserverValidatorProps from "@/types/HomeserverValidatorProps/HomeserverValidatorProps";
 
 function HomeserverValidator(props: HomeserverValidatorProps) {
   const { value, onChange } = props;
