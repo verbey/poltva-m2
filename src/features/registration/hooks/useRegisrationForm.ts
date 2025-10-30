@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { set, z } from "zod";
+import { z } from "zod";
 import { MatrixError, createClient, RegisterRequest, IAuthData, RegisterResponse, AuthDict, MatrixClient } from "matrix-js-sdk";
 import { registerFormSchema } from "../lib/validationSchemas";
 
@@ -12,7 +12,7 @@ export function useRegistrationForm() {
 
 	const [availableFlows, setAvailableFlows] = useState<string[]>([]);
 
-	const [overlayType, setOverlayType] = useState<"captcha" | "email" | null>(null);
+	const [dialogueType, setDialogueType] = useState<"captcha" | "email" | null>(null);
 
 	const [currentStage, setCurrentStage] = useState<string | null>(null);
 
@@ -128,9 +128,9 @@ export function useRegistrationForm() {
 	}
 
 	useEffect(() => {
-		if (currentStage === "m.login.recaptcha") setOverlayType("captcha");
-		else if (currentStage === "m.login.email.identity") setOverlayType("email");
-		else setOverlayType(null);
+		if (currentStage === "m.login.recaptcha") setDialogueType("captcha");
+		else if (currentStage === "m.login.email.identity") setDialogueType("email");
+		else setDialogueType(null);
 	}, [isSubmitting, currentStage]);
 
 	async function onSubmit(values: z.infer<typeof registerFormSchema>) {
@@ -180,7 +180,7 @@ export function useRegistrationForm() {
 		isValidating,
 		isSubmitting,
 		availableFlows,
-		overlayType,
+		dialogueType,
 		currentStage,
 		initialAuthData,
 		submitStage,
