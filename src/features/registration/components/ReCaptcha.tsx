@@ -5,7 +5,7 @@ type SubmitStageFn = (authDict: Record<string, unknown>) => Promise<unknown> | v
 
 export default function ReCaptcha({ submitStage, siteKey }: { submitStage: SubmitStageFn; siteKey?: string | null }) {
 	const onChange = (value: string | null) => {
-		if (value) submitStage({ response: value });
+		if (value) submitStage({ response: value, type: "m.login.recaptcha" });
 	};
 
 	return (
