@@ -6,12 +6,14 @@ import { Input } from "@/components/ui/input";
 import { PasswordInput } from "@/components/PasswordInput";
 import { Spinner } from "@/components/ui/spinner";
 
+import Overlay from "./Overlay";
+
 import Link from "next/link";
 
 import { useRegistrationForm } from "../hooks/useRegisrationForm";
 
 export function RegisterForm() {
-	const { form, onSubmit, availableFlows, isLoading, isValidating, isSubmitting } = useRegistrationForm();
+	const { form, onSubmit, availableFlows, isLoading, isValidating, isSubmitting, overlayType, submitStage, paramRecaptchaSiteKey } = useRegistrationForm();
 
 	return (
 		<div className="w-full max-w-sm">
@@ -123,6 +125,7 @@ export function RegisterForm() {
 					Login
 				</Link>
 			</div>
+			<Overlay overlayType={overlayType} submitStage={submitStage} recaptchaSiteKey={paramRecaptchaSiteKey} />
 		</div>
 	);
 }

@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
+import { set, z } from "zod";
 import { MatrixError, createClient, RegisterRequest, IAuthData, RegisterResponse, AuthDict, MatrixClient } from "matrix-js-sdk";
 import { registerFormSchema } from "../lib/validationSchemas";
 
@@ -19,6 +19,8 @@ export function useRegistrationForm() {
 	const [initialAuthData, setInitialAuthData] = useState<IAuthData | null>(null);
 	const [baseRegistration, setBaseRegistration] = useState<RegisterRequest | null>(null);
 
+	const [paramRecaptchaSiteKey, setParamRecaptchaSiteKey] = useState<string | null>(null);
+
 	const form = useForm<z.infer<typeof registerFormSchema>>({
 		resolver: zodResolver(registerFormSchema),
 		defaultValues: {
@@ -31,13 +33,12 @@ export function useRegistrationForm() {
 		},
 	});
 
-	const { watch, trigger } = form;
-	const homeserverValue = watch("homeserver");
+	const homeserverValue = form.watch("homeserver");
 	const clientRef = useRef<MatrixClient | null>(null);
 
 	useEffect(() => {
 		const timer = setTimeout(() => {
-			trigger("homeserver");
+			form.trigger("homeserver");
 			fetchAuthFlows();
 		}, 500);
 
@@ -69,21 +70,20 @@ export function useRegistrationForm() {
 				setIsValidating(false);
 			}
 		}
-	}, [homeserverValue, trigger, form]);
+	}, [homeserverValue]);
 
 	function getNextStage(auth: IAuthData | null): string | null {
 		if (!auth) return null;
 		const flows = auth.flows ?? [];
 		const completed = auth.completed ?? [];
 		const flatStages = flows.flatMap((f) => f.stages ?? []);
-		for (const s of flatStages) {
-			if (!completed.includes(s)) return s;
-		}
+		for (const s of flatStages) if (!completed.includes(s)) return s;
 		return null;
 	}
 
 	async function submitStage(authDict: AuthDict): Promise<RegisterResponse | undefined> {
 		if (!baseRegistration) {
+			console.log(baseRegistration);
 			console.error("submitStage called but base registration data not set.");
 			return undefined;
 		}
@@ -94,14 +94,16 @@ export function useRegistrationForm() {
 			client = createClient({ baseUrl: `https://${homeserver}` });
 			clientRef.current = client;
 		}
-
 		setIsSubmitting(true);
 		try {
 			const req: RegisterRequest = {
 				...baseRegistration,
-				auth: authDict as AuthDict,
+				auth: {
+					...authDict,
+					session: initialAuthData?.session,
+				} as AuthDict,
 			};
-
+			console.log("Submitting registration stage with request:", req);
 			const resp = await client.registerRequest(req);
 			setInitialAuthData(null);
 			setBaseRegistration(null);
@@ -158,7 +160,9 @@ export function useRegistrationForm() {
 			if (error instanceof MatrixError && error.httpStatus === 401 && error.data) {
 				const uia = error.data as IAuthData;
 				setInitialAuthData(uia);
+				setParamRecaptchaSiteKey(uia.params?.["m.login.recaptcha"]?.public_key || null);
 				setBaseRegistration(registrationData);
+				console.log(registrationData);
 				const next = getNextStage(uia);
 				setCurrentStage(next);
 			} else {
@@ -180,5 +184,6 @@ export function useRegistrationForm() {
 		currentStage,
 		initialAuthData,
 		submitStage,
+		paramRecaptchaSiteKey,
 	};
 }
