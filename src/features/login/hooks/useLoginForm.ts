@@ -5,16 +5,9 @@ import useSessionStore from "@/stores/useSessionStore";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import LoginFormProps from "../types/LoginFormProps";
 
-type UseLoginFormOptions = {
-  homeserver?: string;
-  canSubmit?: boolean;
-  isHsLoading?: boolean;
-  isHsError?: boolean;
-  isHsValid?: boolean | null;
-};
-
-function useLoginForm(options: UseLoginFormOptions = {}) {
+function useLoginForm(options: LoginFormProps) {
   const router = useRouter();
   const { homeserver, canSubmit, isHsLoading, isHsError, isHsValid } = options;
 

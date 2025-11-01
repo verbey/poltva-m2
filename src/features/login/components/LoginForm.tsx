@@ -16,22 +16,10 @@ import { Input } from "@/components/ui/input";
 
 import Link from "next/link";
 
-interface LoginFormProps {
-  homeserver: string;
-  isHsValid: boolean | null;
-  isHsLoading: boolean;
-  isHsError: boolean;
-  canSubmit: boolean;
-}
+import type LoginFormProps from "../types/LoginFormProps";
 
 function LoginForm(props: LoginFormProps) {
-  const { form, handleSubmit, blocked, submitError } = useLoginForm({
-    homeserver: props.homeserver,
-    canSubmit: props.canSubmit,
-    isHsLoading: props.isHsLoading,
-    isHsError: props.isHsError,
-    isHsValid: props.isHsValid,
-  });
+  const { form, handleSubmit, blocked, submitError } = useLoginForm(props);
 
   return (
     <Form {...form}>
