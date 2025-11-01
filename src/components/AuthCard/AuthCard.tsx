@@ -8,7 +8,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-import { LoginForm } from "@/features/login/components/LoginForm";
+import LoginForm from "@/features/login/components/LoginForm";
 import HomeserverValidator from "../HomeserverValidator/HomeserverValidator";
 import useAuthCard from "@/hooks/useAuthCard/useAuthCard";
 
