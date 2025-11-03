@@ -13,7 +13,8 @@ import Link from "next/link";
 import { useRegistrationForm } from "../hooks/useRegisrationForm";
 
 export function RegisterForm() {
-	const { form, onSubmit, availableFlows, isLoading, isValidating, isSubmitting, dialogueType, submitStage, paramRecaptchaSiteKey } = useRegistrationForm();
+	const { form, onSubmit, availableFlows, isLoading, isValidating, isSubmitting, dialogueType, submitStage, paramRecaptchaSiteKey, requestEmailToken } =
+		useRegistrationForm();
 
 	return (
 		<div className="w-full max-w-sm">
@@ -125,7 +126,7 @@ export function RegisterForm() {
 					Login
 				</Link>
 			</div>
-			<AuthStageDialogue type={dialogueType} submitStage={submitStage} recaptchaSiteKey={paramRecaptchaSiteKey} />
+			<AuthStageDialogue type={dialogueType} submitStage={submitStage} recaptchaSiteKey={paramRecaptchaSiteKey} requestEmailToken={requestEmailToken} />
 		</div>
 	);
 }

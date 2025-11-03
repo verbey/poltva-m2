@@ -64,7 +64,7 @@ export function useRegistrationForm() {
 
 					console.log("Available registration stages:", uniqueStages);
 				} else {
-					console.log("Could not connect to the homeserver to get registration info.", error);
+					// console.log("Could not connect to the homeserver to get registration info.", error);
 				}
 			} finally {
 				setIsValidating(false);
@@ -87,13 +87,12 @@ export function useRegistrationForm() {
 			console.error("submitStage called but base registration data not set.");
 			return undefined;
 		}
-
-		let client = clientRef.current;
-		if (!client) {
-			const homeserver = form.getValues().homeserver;
-			client = createClient({ baseUrl: `https://${homeserver}` });
-			clientRef.current = client;
+		if (!clientRef.current) {
+			console.error("submitStage called but Matrix client not initialized.");
+			return undefined;
 		}
+		const client = clientRef.current;
+
 		setIsSubmitting(true);
 		try {
 			const req: RegisterRequest = {
@@ -162,12 +161,43 @@ export function useRegistrationForm() {
 				setInitialAuthData(uia);
 				setParamRecaptchaSiteKey(uia.params?.["m.login.recaptcha"]?.public_key || null);
 				setBaseRegistration(registrationData);
-				console.log(registrationData);
 				const next = getNextStage(uia);
 				setCurrentStage(next);
 			} else {
 				console.error("Registration failed:", error);
 			}
+		} finally {
+			setIsSubmitting(false);
+		}
+	}
+	const sendAttemptRef = useRef(1);
+
+	async function requestEmailToken(): Promise<{ sid: string; clientSecret: string } | undefined> {
+		const email = form.getValues("email");
+		if (!email) {
+			console.error("requestEmailToken called but email not provided.");
+			return undefined;
+		}
+		if (!clientRef.current) {
+			console.error("requestEmailToken called but Matrix client not initialized.");
+			return undefined;
+		}
+
+		setIsSubmitting(true);
+		try {
+			const client = clientRef.current;
+			const clientSecret = client.generateClientSecret();
+			const sendAttempt = sendAttemptRef.current;
+			sendAttemptRef.current += 1;
+
+			const tokenResp = await (client as MatrixClient).requestRegisterEmailToken(email, clientSecret, sendAttempt);
+
+			return {
+				sid: (tokenResp as { sid: string })?.sid,
+				clientSecret,
+			};
+		} catch (err) {
+			throw new Error("Failed to request email token: " + err);
 		} finally {
 			setIsSubmitting(false);
 		}
@@ -185,5 +215,6 @@ export function useRegistrationForm() {
 		initialAuthData,
 		submitStage,
 		paramRecaptchaSiteKey,
+		requestEmailToken,
 	};
 }

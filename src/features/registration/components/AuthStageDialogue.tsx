@@ -1,15 +1,19 @@
 import ReCaptcha from "./ReCaptcha";
+import EmailVerification from "./Email";
 
 type SubmitStageFn = (authDict: Record<string, unknown>) => Promise<unknown> | void;
+type RequestEmailTokenFn = () => Promise<{ sid: string; clientSecret: string } | undefined>;
 
 export default function AuthStageDialogue({
 	type,
 	submitStage,
 	recaptchaSiteKey,
+	requestEmailToken,
 }: {
 	type: "captcha" | "email" | null;
 	submitStage: SubmitStageFn;
 	recaptchaSiteKey?: string | null;
+	requestEmailToken?: RequestEmailTokenFn;
 }) {
 	if (!type) return null;
 	return (
@@ -24,7 +28,7 @@ export default function AuthStageDialogue({
 				{type === "email" && (
 					<>
 						<h2 className="text-xl font-bold mb-4">Please verify your email</h2>
-						<p>NOT IMPLEMENTED</p>
+						<EmailVerification submitStage={submitStage} requestEmailToken={requestEmailToken} />
 					</>
 				)}
 			</div>
