@@ -1,15 +1,7 @@
 import { z } from "zod";
-import validateHomeserver from "./homserverValidation";
 
 export const registerFormSchema = z
 	.object({
-		homeserver: z
-			.string()
-			.min(3, { message: "Homeserver must be at least 3 characters long." })
-			.refine((val) => val.includes("."), {
-				message: "Homeserver must be a valid domain.",
-			})
-			.refine(async (val) => await validateHomeserver(val), { message: "Homeserver is not reachable or invalid." }),
 		username: z.string().min(3, {
 			message: "Username must be at least 3 characters long.",
 		}),

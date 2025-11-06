@@ -5,10 +5,12 @@ import { z } from "zod";
 import { MatrixError, createClient, RegisterRequest, IAuthData, RegisterResponse, AuthDict, MatrixClient } from "matrix-js-sdk";
 import { registerFormSchema } from "../lib/validationSchemas";
 
-export function useRegistrationForm() {
-	const [isValidating, setIsValidating] = useState(false);
+import registerFormProps from "../types/registerFormProps";
+
+export function useRegistrationForm(props: registerFormProps) {
+	const { homeserver, isHsValid, isHsLoading } = props;
+
 	const [isSubmitting, setIsSubmitting] = useState(false);
-	const isLoading = isValidating || isSubmitting;
 
 	const [availableFlows, setAvailableFlows] = useState<string[]>([]);
 
@@ -29,48 +31,32 @@ export function useRegistrationForm() {
 			confirmPassword: "",
 			email: "",
 			registration_token: "",
-			homeserver: "matrix.org",
 		},
 	});
 
-	const homeserverValue = form.watch("homeserver");
 	const clientRef = useRef<MatrixClient | null>(null);
 
 	useEffect(() => {
-		const timer = setTimeout(() => {
-			form.trigger("homeserver");
-			fetchAuthFlows();
-		}, 500);
-
-		return () => clearTimeout(timer);
+		if (!isHsValid) return;
+		else fetchAuthFlows();
 
 		async function fetchAuthFlows() {
-			const values = form.getValues();
-			setIsValidating(true);
 			setAvailableFlows([]);
 
-			const client = createClient({ baseUrl: `https://${values.homeserver}` });
+			const client = createClient({ baseUrl: `https://${homeserver}` });
 
 			try {
 				await client.registerRequest({});
 			} catch (error) {
 				if (error instanceof MatrixError && error.httpStatus === 401 && error.data) {
 					const data = error.data as IAuthData;
-
 					const stages = (data.flows ?? []).flatMap((f) => f.stages ?? []);
-
 					const uniqueStages = Array.from(new Set(stages));
 					setAvailableFlows(uniqueStages);
-
-					console.log("Available registration stages:", uniqueStages);
-				} else {
-					// console.log("Could not connect to the homeserver to get registration info.", error);
-				}
-			} finally {
-				setIsValidating(false);
+				} else console.log("Could not connect to the homeserver to get registration info.", error);
 			}
 		}
-	}, [homeserverValue]);
+	}, [homeserver, isHsValid]);
 
 	function getNextStage(auth: IAuthData | null): string | null {
 		if (!auth) return null;
@@ -138,7 +124,7 @@ export function useRegistrationForm() {
 		setInitialAuthData(null);
 		setBaseRegistration(null);
 
-		const baseUrl = `https://${values.homeserver}`;
+		const baseUrl = `https://${homeserver}`;
 		const client = createClient({ baseUrl });
 		clientRef.current = client;
 
@@ -170,6 +156,9 @@ export function useRegistrationForm() {
 			setIsSubmitting(false);
 		}
 	}
+
+	// Email logic, separate later:
+
 	const sendAttemptRef = useRef(1);
 
 	async function requestEmailToken(): Promise<{ sid: string; clientSecret: string } | undefined> {
@@ -206,9 +195,6 @@ export function useRegistrationForm() {
 	return {
 		form,
 		onSubmit,
-		isLoading,
-		isValidating,
-		isSubmitting,
 		availableFlows,
 		dialogueType,
 		currentStage,
@@ -216,5 +202,6 @@ export function useRegistrationForm() {
 		submitStage,
 		paramRecaptchaSiteKey,
 		requestEmailToken,
+		isHsLoading,
 	};
 }

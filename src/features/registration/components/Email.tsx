@@ -1,6 +1,5 @@
 import { useEffect, useState, useCallback, useRef } from "react";
 import { Button } from "@/components/ui/button";
-import { log } from "console";
 type SubmitStageFn = (authDict: Record<string, unknown>) => Promise<unknown> | void;
 
 export default function EmailVerification({
@@ -40,6 +39,7 @@ export default function EmailVerification({
 		};
 
 		fetchEmailToken();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	const handleIClicked = useCallback(async () => {
