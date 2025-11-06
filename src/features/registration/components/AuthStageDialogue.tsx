@@ -1,7 +1,7 @@
 import ReCaptcha from "./ReCaptcha";
 import EmailVerification from "./Email";
+import type { SubmitStageFn } from "../types/submitStage";
 
-type SubmitStageFn = (authDict: Record<string, unknown>) => Promise<unknown> | void;
 type RequestEmailTokenFn = () => Promise<{ sid: string; clientSecret: string } | undefined>;
 
 export default function AuthStageDialogue({
