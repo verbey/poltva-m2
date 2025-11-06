@@ -1,7 +1,5 @@
-"use client";
-
-import AuthCard from "@/components/AuthCard";
+import AuthCard from "@/components/AuthCard/AuthCard";
 
 export default function LoginPage() {
-  return <AuthCard authType="login" />;
+	return <AuthCard authType="login" />;
 }
