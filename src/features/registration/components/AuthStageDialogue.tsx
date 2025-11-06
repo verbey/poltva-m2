@@ -1,5 +1,5 @@
-import ReCaptcha from "./ReCaptcha";
-import EmailVerification from "./Email";
+import ReCaptcha from "./AuthStages/ReCaptcha";
+import EmailVerification from "./AuthStages/Email";
 import type { SubmitStageFn } from "../types/submitStage";
 import type { RequestEmailToken } from "../types/emailVerification";
 export default function AuthStageDialogue({

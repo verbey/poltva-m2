@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
-import useEmailVerification from "../hooks/useEmailVerification";
-import type { SubmitStageFn } from "../types/submitStage";
+import useEmailVerification from "../../hooks/useEmailVerification";
+import type { SubmitStageFn } from "../../types/submitStage";
 
 export default function EmailVerification({
 	submitStage,
