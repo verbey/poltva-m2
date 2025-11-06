@@ -6,13 +6,9 @@ import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
 
 import PasswordInput from "@/components/PasswordInput/PasswordInput";
-
-// import AuthStageDialogue from "./AuthStageDialogue";
-
 import Link from "next/link";
 
 import { useRegistrationForm } from "../hooks/useRegisrationForm";
-
 import registerFormProps from "../types/registerFormProps";
 
 export function RegisterForm(props: registerFormProps) {
@@ -112,7 +108,6 @@ export function RegisterForm(props: registerFormProps) {
 					Login
 				</Link>
 			</div>
-			{/* <AuthStageDialogue type={dialogueType} submitStage={submitStage} recaptchaSiteKey={paramRecaptchaSiteKey} requestEmailToken={requestEmailToken} /> */}
 		</div>
 	);
 }

@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import type { SubmitStageFn } from "../types/submitStage";
+import type { SubmitStageFn } from "../../types/submitStage";
 
 export default function useReCaptcha(submitStage: SubmitStageFn) {
 	const onChange = useCallback(

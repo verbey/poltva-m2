@@ -1,9 +1,9 @@
 import { useEffect, useState, useRef, useCallback } from "react";
-import type { SubmitStageFn } from "../types/submitStage";
-import type { RequestEmailToken } from "../types/emailVerification";
+import type { SubmitStageFn } from "../../types/submitStage";
+import type { RequestEmailToken } from "../../types/emailVerification";
 
-export default function useEmailVerification(params: { submitStage: SubmitStageFn; requestEmailToken?: RequestEmailToken }) {
-	const { submitStage, requestEmailToken } = params;
+export default function useEmailVerification(props: { submitStage: SubmitStageFn; requestEmailToken?: RequestEmailToken }) {
+	const { submitStage, requestEmailToken } = props;
 
 	const [sid, setSid] = useState<string | null>(null);
 	const [clientSecret, setClientSecret] = useState<string | null>(null);

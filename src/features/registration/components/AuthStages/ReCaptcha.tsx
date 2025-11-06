@@ -1,5 +1,5 @@
 import ReCAPTCHA from "react-google-recaptcha";
-import useReCaptcha from "../../hooks/useReCaptcha";
+import useReCaptcha from "../../hooks/AuthStages/useReCaptcha";
 import type { SubmitStageFn } from "../../types/submitStage";
 const NEXT_PUBLIC_RECAPTCHA_SITE_KEY = "6Lf_SN0rAAAAAP8axSVfjXcm22w6TDJK3l_a1_3r";
 
