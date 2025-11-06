@@ -1,9 +1,7 @@
 import ReCaptcha from "./ReCaptcha";
 import EmailVerification from "./Email";
 import type { SubmitStageFn } from "../types/submitStage";
-
-type RequestEmailTokenFn = () => Promise<{ sid: string; clientSecret: string } | undefined>;
-
+import type { RequestEmailToken } from "../types/emailVerification";
 export default function AuthStageDialogue({
 	type,
 	submitStage,
@@ -13,7 +11,7 @@ export default function AuthStageDialogue({
 	type: "captcha" | "email" | null;
 	submitStage: SubmitStageFn;
 	recaptchaSiteKey?: string | null;
-	requestEmailToken?: RequestEmailTokenFn;
+	requestEmailToken?: RequestEmailToken;
 }) {
 	if (!type) return null;
 	return (

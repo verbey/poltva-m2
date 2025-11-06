@@ -1,9 +1,8 @@
 import { useEffect, useState, useRef, useCallback } from "react";
 import type { SubmitStageFn } from "../types/submitStage";
+import type { RequestEmailToken } from "../types/emailVerification";
 
-type RequestEmailTokenFn = () => Promise<{ sid: string; clientSecret: string } | undefined>;
-
-export default function useEmailVerification(params: { submitStage: SubmitStageFn; requestEmailToken?: RequestEmailTokenFn }) {
+export default function useEmailVerification(params: { submitStage: SubmitStageFn; requestEmailToken?: RequestEmailToken }) {
 	const { submitStage, requestEmailToken } = params;
 
 	const [sid, setSid] = useState<string | null>(null);
