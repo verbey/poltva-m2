@@ -1,18 +1,8 @@
 import { Button } from "@/components/ui/button";
 import useEmailVerification from "../../hooks/AuthStages/useEmailVerification";
-import type { SubmitStageFn } from "../../types/submitStage";
 
-export default function EmailVerification({
-	submitStage,
-	requestEmailToken,
-}: {
-	submitStage: SubmitStageFn;
-	requestEmailToken?: () => Promise<{ sid: string; clientSecret: string } | undefined>;
-}) {
-	const { sid, isRequesting, isSubmitting, handleIClicked } = useEmailVerification({
-		submitStage,
-		requestEmailToken,
-	});
+export default function EmailVerification() {
+	const { sid, isRequesting, isSubmitting, handleIClicked } = useEmailVerification();
 
 	return (
 		<div>

@@ -1,18 +1,9 @@
 import ReCaptcha from "./AuthStages/ReCaptcha";
 import EmailVerification from "./AuthStages/Email";
-import type { SubmitStageFn } from "../types/submitStage";
-import type { RequestEmailToken } from "../types/emailVerification";
-export default function AuthStageDialogue({
-	type,
-	submitStage,
-	recaptchaSiteKey,
-	requestEmailToken,
-}: {
-	type: "captcha" | "email" | null;
-	submitStage: SubmitStageFn;
-	recaptchaSiteKey?: string | null;
-	requestEmailToken?: RequestEmailToken;
-}) {
+import useAuthStageDialogue from "../hooks/useAuthStageDialogue";
+
+export default function AuthStageDialogue() {
+	const { type } = useAuthStageDialogue();
 	if (!type) return null;
 	return (
 		<div className="fixed inset-0 bg-black/65 flex items-center justify-center z-50">
@@ -20,13 +11,13 @@ export default function AuthStageDialogue({
 				{type === "captcha" && (
 					<>
 						<h2 className="text-xl font-bold mb-4">Please complete the CAPTCHA</h2>
-						<ReCaptcha submitStage={submitStage} siteKey={recaptchaSiteKey ?? undefined} />
+						<ReCaptcha />
 					</>
 				)}
 				{type === "email" && (
 					<>
 						<h2 className="text-xl font-bold mb-4">Please verify your email</h2>
-						<EmailVerification submitStage={submitStage} requestEmailToken={requestEmailToken} />
+						<EmailVerification />
 					</>
 				)}
 			</div>

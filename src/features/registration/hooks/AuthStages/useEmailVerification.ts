@@ -1,31 +1,39 @@
 import { useEffect, useState, useRef, useCallback } from "react";
-import type { SubmitStageFn } from "../../types/submitStage";
-import type { RequestEmailToken } from "../../types/emailVerification";
+import { useRegistrationStore } from "@/stores/useRegistrationStore";
 
-export default function useEmailVerification(props: { submitStage: SubmitStageFn; requestEmailToken?: RequestEmailToken }) {
-	const { submitStage, requestEmailToken } = props;
+export default function useEmailVerification() {
+	const submitStage = useRegistrationStore((s) => s.submitStage);
+	const client = useRegistrationStore((s) => s.client);
+	const registrationEmail = useRegistrationStore((s) => s.registrationEmail);
 
 	const [sid, setSid] = useState<string | null>(null);
 	const [clientSecret, setClientSecret] = useState<string | null>(null);
+
 	const [isRequesting, setIsRequesting] = useState(false);
 	const [isSubmitting, setIsSubmitting] = useState(false);
 
 	const requestedRef = useRef(false);
+	const sendAttemptRef = useRef(1);
 
 	useEffect(() => {
 		if (requestedRef.current) return;
 		requestedRef.current = true;
-
 		const fetchEmailToken = async () => {
-			if (!requestEmailToken) return;
+			if (!registrationEmail) return;
+			if (!client) return;
 			setIsRequesting(true);
 			try {
-				const result = await requestEmailToken();
-				if (result && result.sid && result.clientSecret) {
-					setSid(result.sid);
-					setClientSecret(result.clientSecret);
+				const secret = client.generateClientSecret();
+				const sendAttempt = sendAttemptRef.current;
+				sendAttemptRef.current += 1;
+
+				const tokenResp = await client.requestRegisterEmailToken(registrationEmail, secret, sendAttempt);
+				const returnedSid = (tokenResp as { sid?: string })?.sid;
+				if (returnedSid) {
+					setSid(returnedSid);
+					setClientSecret(secret);
 				} else {
-					console.error("Failed to request email token or no sid/clientSecret returned.");
+					console.error("Failed to request email token or no sid returned.");
 				}
 			} catch (err) {
 				console.error("requestEmailToken failed:", err);
@@ -33,10 +41,8 @@ export default function useEmailVerification(props: { submitStage: SubmitStageFn
 				setIsRequesting(false);
 			}
 		};
-
 		void fetchEmailToken();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+	}, [registrationEmail, client]);
 
 	const handleIClicked = useCallback(async () => {
 		if (!sid) return;
