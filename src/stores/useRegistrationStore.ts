@@ -15,10 +15,7 @@ interface RegistrationState {
 
 	initClient: (homeserver: string) => Promise<MatrixClient>;
 	reset: () => void;
-	startRegistration: (
-		data: RegisterRequest,
-		ctx?: { email?: string | null; registrationToken?: string | null }
-	) => Promise<RegisterResponse | MatrixError | undefined>;
+	startRegistration: (data: RegisterRequest) => Promise<RegisterResponse | MatrixError | undefined>;
 	submitStage: (authDict: AuthDict) => Promise<RegisterResponse | undefined>;
 }
 
@@ -51,7 +48,7 @@ export const useRegistrationStore = create<RegistrationState>((set, get) => ({
 			registrationEmail: null,
 		}),
 
-	startRegistration: async (data, ctx) => {
+	startRegistration: async (data) => {
 		const client = get().client;
 		if (!client) {
 			console.error("startRegistration called but Matrix client not initialized.");
