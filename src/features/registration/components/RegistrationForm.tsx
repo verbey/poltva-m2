@@ -92,37 +92,38 @@ export function RegisterForm(props: registerFormProps) {
 										</FormItem>
 									)}
 								/>
-
-								<FormField
-									control={form.control}
-									name="terms_accepted"
-									render={({ field }) => (
-										<FormItem className="grid gap-2 mt-2">
-											<FormLabel htmlFor="terms_accepted">
-												<input
-													type="checkbox"
-													id="terms_accepted"
-													checked={field.value}
-													onChange={(e) => field.onChange(e.target.checked)}
-													disabled={isHsLoading}
-													className="mr-2"
-												/>
-												<span>
-													I accept server{" "}
-													{consentUrl ? (
-														<a href={consentUrl} target="_blank" rel="noreferrer" className="underline">
-															Terms and Conditions
-														</a>
-													) : (
-														"Terms and Conditions"
-													)}
-													.
-												</span>
-											</FormLabel>
-											<FormMessage />
-										</FormItem>
-									)}
-								/>
+								{availableFlows.includes("m.login.terms") && (
+									<FormField
+										control={form.control}
+										name="terms_accepted"
+										render={({ field }) => (
+											<FormItem className="grid gap-2">
+												<FormLabel htmlFor="terms_accepted">
+													<input
+														type="checkbox"
+														id="terms_accepted"
+														checked={field.value}
+														onChange={(e) => field.onChange(e.target.checked)}
+														disabled={isHsLoading}
+														className="mr-2"
+													/>
+													<span>
+														I accept server{" "}
+														{consentUrl ? (
+															<a href={consentUrl} target="_blank" rel="noreferrer" className="underline">
+																Terms and Conditions
+															</a>
+														) : (
+															"Terms and Conditions"
+														)}
+														.
+													</span>
+												</FormLabel>
+												<FormMessage />
+											</FormItem>
+										)}
+									/>
+								)}
 							</div>
 						)}
 						<Button type="submit" className="w-full" disabled={isHsLoading}>
