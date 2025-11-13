@@ -81,7 +81,6 @@ export const useRegistrationStore = create<RegistrationState>((set, get) => ({
 					baseRegistration: data,
 					currentStage: next,
 					recaptchaSiteKey,
-					registrationEmail: ctx?.email ?? null, // remove?
 				});
 				return undefined;
 			}

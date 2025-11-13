@@ -5,6 +5,7 @@ export default function useEmailVerification() {
 	const submitStage = useRegistrationStore((s) => s.submitStage);
 	const client = useRegistrationStore((s) => s.client);
 	const registrationEmail = useRegistrationStore((s) => s.registrationEmail);
+	const reset = useRegistrationStore((s) => s.reset);
 
 	const [sid, setSid] = useState<string | null>(null);
 	const [clientSecret, setClientSecret] = useState<string | null>(null);
@@ -14,6 +15,13 @@ export default function useEmailVerification() {
 
 	const requestedRef = useRef(false);
 	const sendAttemptRef = useRef(1);
+	const mountedRef = useRef(true);
+
+	useEffect(() => {
+		return () => {
+			mountedRef.current = false;
+		};
+	}, []);
 
 	useEffect(() => {
 		if (requestedRef.current) return;
@@ -38,7 +46,7 @@ export default function useEmailVerification() {
 			} catch (err) {
 				console.error("requestEmailToken failed:", err);
 			} finally {
-				setIsRequesting(false);
+				if (mountedRef.current) setIsRequesting(false);
 			}
 		};
 		void fetchEmailToken();
@@ -57,9 +65,13 @@ export default function useEmailVerification() {
 				},
 			});
 		} finally {
-			setIsSubmitting(false);
+			if (mountedRef.current) setIsSubmitting(false);
 		}
 	}, [sid, clientSecret, submitStage, isSubmitting]);
+
+	const handleCancel = useCallback(() => {
+		reset();
+	}, [reset]);
 
 	return {
 		sid,
@@ -67,5 +79,6 @@ export default function useEmailVerification() {
 		isRequesting,
 		isSubmitting,
 		handleIClicked,
+		handleCancel,
 	};
 }
