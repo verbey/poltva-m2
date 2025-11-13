@@ -85,8 +85,10 @@ export function useRegistrationForm(props: registerFormProps) {
 
 	useEffect(() => {
 		if (currentStage === "m.login.registration_token") submitStage({ type: "m.login.registration_token", token: form.getValues("registration_token") });
-		// else if (currentStage === "m.login.terms") submitStage({ type: "m.login.terms", accepted_terms: ["poltva_terms_v1"] });
-		else return;
+		else if (currentStage === "m.login.terms") {
+			if (form.getValues("terms_accepted")) submitStage({ type: "m.login.terms" });
+			else form.setError("terms_accepted", { type: "manual", message: "You must accept the terms to proceed." });
+		} else return;
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [currentStage]);
 
