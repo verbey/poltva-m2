@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { createClient, MatrixClient, MatrixError, type IAuthData, type RegisterRequest, type RegisterResponse, type AuthDict } from "matrix-js-sdk";
+import { createClient, MatrixClient, MatrixError, type IAuthData, type RegisterRequest, type RegisterResponse, type AuthDict, type Terms } from "matrix-js-sdk";
 
 interface RegistrationState {
 	client: MatrixClient | null;
@@ -30,6 +30,7 @@ export const useRegistrationStore = create<RegistrationState>((set, get) => ({
 
 	recaptchaSiteKey: null,
 	registrationEmail: null,
+	registrationTermsParams: null,
 
 	initClient: async (homeserver: string) => {
 		const baseUrl = homeserver.startsWith("http") ? homeserver : `https://${homeserver}`;

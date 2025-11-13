@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -9,7 +9,7 @@ import { MatrixError, type IAuthData, type MatrixClient } from "matrix-js-sdk";
 
 export function useRegistrationForm(props: registerFormProps) {
 	const { homeserver, isHsValid, isHsLoading } = props;
-	const { initClient, startRegistration, submitStage, currentStage } = useRegistrationStore();
+	const { initClient, startRegistration, submitStage, currentStage, client } = useRegistrationStore();
 	const [availableFlows, setAvailableFlows] = useState<string[]>([]);
 	const [UIAFetchError, setUIAFetchError] = useState<string | null>(null);
 
@@ -83,6 +83,12 @@ export function useRegistrationForm(props: registerFormProps) {
 		}
 	};
 
+	const consentUrl = useMemo(() => {
+		const base = client?.getHomeserverUrl?.() ?? "";
+		if (!base) return null;
+		return `${base.replace(/\/$/, "")}/_matrix/consent`;
+	}, [client]);
+
 	useEffect(() => {
 		if (currentStage === "m.login.registration_token") submitStage({ type: "m.login.registration_token", token: form.getValues("registration_token") });
 		else if (currentStage === "m.login.terms") {
@@ -93,10 +99,7 @@ export function useRegistrationForm(props: registerFormProps) {
 	}, [currentStage]);
 
 	useEffect(() => {
-		setUIAFetchError(null);
-	}, [homeserver]);
-
-	useEffect(() => {
+		setUIAFetchError(null); //пофиксить странное оторбажение при смене хомесервера
 		if (!isHsValid) return;
 		let cancelled = false;
 		(async () => {
@@ -127,5 +130,6 @@ export function useRegistrationForm(props: registerFormProps) {
 		availableFlows,
 		isHsLoading,
 		UIAFetchError,
+		consentUrl,
 	};
 }
