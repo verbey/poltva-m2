@@ -10,9 +10,13 @@ import Link from "next/link";
 
 import { useRegistrationForm } from "../hooks/useRegisrationForm";
 import registerFormProps from "../types/registerFormProps";
+import { useEffect } from "react";
 
 export function RegisterForm(props: registerFormProps) {
-	const { form, onSubmit, availableFlows, isHsLoading, UIAFetchError, consentUrl } = useRegistrationForm(props);
+	const { form, onSubmit, availableFlows, blocked, UIAFetchError, consentUrl } = useRegistrationForm(props);
+	useEffect(() => {
+		console.log("RegisterForm render - blocked:", blocked);
+	}, [blocked]);
 	return (
 		<div className="w-full max-w-sm">
 			<Form {...form}>
@@ -29,7 +33,7 @@ export function RegisterForm(props: registerFormProps) {
 										<FormItem className="grid gap-2">
 											<FormLabel htmlFor="username">Username</FormLabel>
 											<FormControl>
-												<Input id="username" {...field} disabled={isHsLoading} />
+												<Input id="username" {...field} disabled={blocked} />
 											</FormControl>
 											<FormMessage />
 										</FormItem>
@@ -43,7 +47,7 @@ export function RegisterForm(props: registerFormProps) {
 											<FormItem className="grid gap-2">
 												<FormLabel htmlFor="email">Email</FormLabel>
 												<FormControl>
-													<Input id="email" type="email" autoComplete="email" {...field} disabled={isHsLoading} />
+													<Input id="email" type="email" autoComplete="email" {...field} disabled={blocked} />
 												</FormControl>
 												<FormMessage />
 											</FormItem>
@@ -58,7 +62,7 @@ export function RegisterForm(props: registerFormProps) {
 											<FormItem className="grid gap-2">
 												<FormLabel htmlFor="registration_token">Registration Token</FormLabel>
 												<FormControl>
-													<Input id="registration_token" {...field} disabled={isHsLoading} />
+													<Input id="registration_token" {...field} disabled={blocked} />
 												</FormControl>
 												<FormMessage />
 											</FormItem>
@@ -72,7 +76,7 @@ export function RegisterForm(props: registerFormProps) {
 										<FormItem className="grid gap-2">
 											<FormLabel htmlFor="password">Password</FormLabel>
 											<FormControl>
-												<PasswordInput id="password" autoComplete="new-password" {...field} disabled={isHsLoading} />
+												<PasswordInput id="password" autoComplete="new-password" {...field} disabled={blocked} />
 											</FormControl>
 											<FormMessage />
 										</FormItem>
@@ -86,7 +90,7 @@ export function RegisterForm(props: registerFormProps) {
 										<FormItem className="grid gap-2">
 											<FormLabel htmlFor="confirmPassword">Confirm Password</FormLabel>
 											<FormControl>
-												<PasswordInput id="confirmPassword" autoComplete="new-password" {...field} disabled={isHsLoading} />
+												<PasswordInput id="confirmPassword" autoComplete="new-password" {...field} disabled={blocked} />
 											</FormControl>
 											<FormMessage />
 										</FormItem>
@@ -104,7 +108,7 @@ export function RegisterForm(props: registerFormProps) {
 														id="terms_accepted"
 														checked={field.value}
 														onChange={(e) => field.onChange(e.target.checked)}
-														disabled={isHsLoading}
+														disabled={blocked}
 														className="mr-2"
 													/>
 													<span>
@@ -126,8 +130,8 @@ export function RegisterForm(props: registerFormProps) {
 								)}
 							</div>
 						)}
-						<Button type="submit" className="w-full" disabled={isHsLoading}>
-							{isHsLoading && <Spinner className="mr-2 h-4 w-4" />}
+						<Button type="submit" className="w-full" disabled={blocked}>
+							{blocked && <Spinner className="mr-2 h-4 w-4" />}
 							Register
 						</Button>
 						{UIAFetchError ? <div className="mt-2 text-sm text-red-600">{UIAFetchError}</div> : null}

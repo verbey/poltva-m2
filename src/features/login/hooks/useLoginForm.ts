@@ -8,91 +8,76 @@ import { useRouter } from "next/navigation";
 import LoginFormProps from "../types/LoginFormProps";
 
 function useLoginForm(options: LoginFormProps) {
-  const router = useRouter();
-  const { homeserver, canSubmit, isHsLoading, isHsError, isHsValid } = options;
+	const router = useRouter();
+	const { homeserver, canSubmit, isHsLoading, isHsError, isHsValid } = options;
 
-  const FormSchema = z
-    .object({
-      username: z
-        .string()
-        .nonempty({ message: "Username/email field should not be empty." }),
-      password: z
-        .string()
-        .nonempty({ message: "Password should not be empty." }),
-    })
-    .required();
+	const FormSchema = z
+		.object({
+			username: z.string().nonempty({ message: "Username/email field should not be empty." }),
+			password: z.string().nonempty({ message: "Password should not be empty." }),
+		})
+		.required();
 
-  const form = useForm<z.infer<typeof FormSchema>>({
-    resolver: zodResolver(FormSchema),
-    defaultValues: {
-      username: "",
-      password: "",
-    },
-  });
+	const form = useForm<z.infer<typeof FormSchema>>({
+		resolver: zodResolver(FormSchema),
+		defaultValues: {
+			username: "",
+			password: "",
+		},
+	});
 
-  const addClientData = useSessionStore((state) => state.addClientData);
-  const setActiveClient = useSessionStore((state) => state.setActiveClient);
+	const addClientData = useSessionStore((state) => state.addClientData);
+	const setActiveClient = useSessionStore((state) => state.setActiveClient);
 
-  const [submitError, setSubmitError] = useState<string | null>(null);
+	const [submitError, setSubmitError] = useState<string | null>(null);
 
-  async function onSubmit(
-    data: z.infer<typeof FormSchema> & { homeserver: string }
-  ) {
-    setSubmitError(null);
+	async function onSubmit(data: z.infer<typeof FormSchema> & { homeserver: string }) {
+		setSubmitError(null);
 
-    try {
-      const baseUrl = data.homeserver.startsWith("http")
-        ? data.homeserver
-        : `https://${data.homeserver}`;
-      const client = createMatrixClient({
-        baseUrl,
-      });
-      const loginRequestParams = {
-        identifier: {
-          type: "m.id.user",
-          user: data.username,
-        },
-        type: "m.login.password",
-        password: data.password,
-      };
-      const loginResponse = await client.loginRequest(loginRequestParams);
-      console.log(loginResponse);
-      addClientData({
-        baseUrl: client.baseUrl,
-        userId: client.getUserId() ?? undefined,
-        accessToken: client.getAccessToken() ?? undefined,
-        refreshToken: client.getRefreshToken() ?? undefined,
-      });
-      setActiveClient(client);
-      router.push("/home");
-    } catch (error) {
-      console.error("Login error:", error);
-      setSubmitError(
-        "Login failed. Please check your credentials or try again."
-      );
-      return;
-    }
-  }
+		try {
+			const baseUrl = data.homeserver.startsWith("http") ? data.homeserver : `https://${data.homeserver}`;
+			const client = createMatrixClient({
+				baseUrl,
+			});
+			const loginRequestParams = {
+				identifier: {
+					type: "m.id.user",
+					user: data.username,
+				},
+				type: "m.login.password",
+				password: data.password,
+			};
+			const loginResponse = await client.loginRequest(loginRequestParams);
+			console.log(loginResponse);
+			addClientData({
+				baseUrl: client.baseUrl,
+				userId: client.getUserId() ?? undefined,
+				accessToken: client.getAccessToken() ?? undefined,
+				refreshToken: client.getRefreshToken() ?? undefined,
+			});
+			setActiveClient(client);
+			router.push("/home");
+		} catch (error) {
+			console.error("Login error:", error);
+			setSubmitError("Login failed. Please check your credentials or try again.");
+			return;
+		}
+	}
 
-  const blocked =
-    !canSubmit ||
-    !homeserver ||
-    !!isHsLoading ||
-    !!isHsError ||
-    isHsValid === false;
+	const blocked = !canSubmit || isHsLoading || isHsError || !isHsValid;
 
-  const handleSubmit = form.handleSubmit((data) => {
-    if (blocked) return;
-    return onSubmit({ ...data, homeserver: homeserver ?? "" });
-  });
+	const handleSubmit = form.handleSubmit((data) => {
+		if (blocked) return;
+		return onSubmit({ ...data, homeserver: homeserver ?? "" });
+	});
 
-  return {
-    form,
-    onSubmit,
-    blocked,
-    handleSubmit,
-    submitError,
-  };
+	return {
+		form,
+		onSubmit,
+		blocked,
+		handleSubmit,
+		submitError,
+	};
 }
 
 export default useLoginForm;

@@ -125,7 +125,7 @@ export function useRegistrationForm(props: registerFormProps) {
 		});
 		if (response instanceof MatrixError) handleMatrixError(response);
 	}
-	const blocked = !canSubmit || !homeserver || !!isHsLoading || !!isHsError || isHsValid === false;
+	const blocked = !canSubmit || isHsLoading || isHsError || !isHsValid || UIAFetchError !== null;
 	return {
 		form,
 		onSubmit,
