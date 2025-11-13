@@ -12,6 +12,7 @@ export function useRegistrationForm(props: registerFormProps) {
 	const { initClient, startRegistration, client } = useRegistrationStore();
 	const [availableFlows, setAvailableFlows] = useState<string[]>([]);
 	const [UIAFetchError, setUIAFetchError] = useState<string | null>(null);
+
 	const form = useForm<z.infer<typeof registerFormSchema>>({
 		resolver: zodResolver(registerFormSchema),
 		defaultValues: {
@@ -88,7 +89,7 @@ export function useRegistrationForm(props: registerFormProps) {
 		if (!isHsValid) return;
 		let cancelled = false;
 		(async () => {
-			const c = client ?? (await initClient(homeserver));
+			const c = await initClient(homeserver);
 			if (cancelled) return;
 			await fetchAuthFlows(c);
 		})();
@@ -96,7 +97,7 @@ export function useRegistrationForm(props: registerFormProps) {
 			cancelled = true;
 		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [homeserver, isHsValid, initClient, client]);
+	}, [homeserver, isHsValid]);
 
 	async function onSubmit(values: z.infer<typeof registerFormSchema>) {
 		setUIAFetchError(null);

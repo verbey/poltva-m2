@@ -22,6 +22,7 @@ export const registerFormSchema = z
 				message: "Password must contain at least one special character",
 			}),
 		confirmPassword: z.string().nonempty("Please confirm your password"),
+		terms_accepted: z.literal(false, { message: "You must accept the terms and conditions of the server" }),
 	})
 	.refine((data) => data.password === data.confirmPassword, {
 		path: ["confirmPassword"],
