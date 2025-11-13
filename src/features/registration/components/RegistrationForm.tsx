@@ -12,8 +12,7 @@ import { useRegistrationForm } from "../hooks/useRegisrationForm";
 import registerFormProps from "../types/registerFormProps";
 
 export function RegisterForm(props: registerFormProps) {
-	const { form, onSubmit, availableFlows, isHsLoading } = useRegistrationForm(props);
-
+	const { form, onSubmit, availableFlows, isHsLoading, UIAFetchError } = useRegistrationForm(props);
 	return (
 		<div className="w-full max-w-sm">
 			<Form {...form}>
@@ -99,6 +98,7 @@ export function RegisterForm(props: registerFormProps) {
 							{isHsLoading && <Spinner className="mr-2 h-4 w-4" />}
 							Register
 						</Button>
+						{UIAFetchError ? <div className="mt-2 text-sm text-red-600">{UIAFetchError}</div> : null}
 					</div>
 				</form>
 			</Form>

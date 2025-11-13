@@ -15,7 +15,6 @@ export default function useAuthStageDialogue() {
 	}, [currentStage]);
 
 	const siteKey = useMemo<string | null>(() => {
-		// Prefer store-provided site key, but try to read from UIA params if needed
 		if (recaptchaSiteKey) return recaptchaSiteKey;
 		const key = (initialAuthData?.params?.["m.login.recaptcha"] as { public_key?: string } | undefined)?.public_key ?? null;
 		return key ?? null;

@@ -11,7 +11,7 @@ export function useRegistrationForm(props: registerFormProps) {
 	const { homeserver, isHsValid, isHsLoading } = props;
 	const { initClient, startRegistration, client } = useRegistrationStore();
 	const [availableFlows, setAvailableFlows] = useState<string[]>([]);
-
+	const [UIAFetchError, setUIAFetchError] = useState<string | null>(null);
 	const form = useForm<z.infer<typeof registerFormSchema>>({
 		resolver: zodResolver(registerFormSchema),
 		defaultValues: {
@@ -22,8 +22,26 @@ export function useRegistrationForm(props: registerFormProps) {
 		},
 	});
 
+	const handleMatrixError = (error: MatrixError) => {
+		switch (error.errcode) {
+			case "M_FORBIDDEN": {
+				setUIAFetchError("Registration is disabled on this homeserver.");
+				break;
+			}
+			case "M_LIMIT_EXCEEDED": {
+				setUIAFetchError("Too many requests. Please try again later.");
+				break;
+			}
+			default: {
+				setUIAFetchError("Unhandled error occurred while fetching registration info.");
+				console.log("Unhandled error occurred while fetching registration info:", error);
+			}
+		}
+	};
+
 	const fetchAuthFlows = async (matrixClient: MatrixClient) => {
 		setAvailableFlows([]);
+		console.log(UIAFetchError);
 		try {
 			await matrixClient.registerRequest({});
 		} catch (error) {
@@ -31,11 +49,17 @@ export function useRegistrationForm(props: registerFormProps) {
 				const data = error.data as IAuthData;
 				const stages = (data.flows ?? []).flatMap((flows) => flows.stages ?? []);
 				setAvailableFlows(Array.from(new Set(stages)));
-			} else {
+			} else if (error instanceof MatrixError && error.data && isHsValid) handleMatrixError(error);
+			else {
+				setUIAFetchError("Could not connect to the homeserver to get registration info.");
 				console.log("Could not connect to the homeserver to get registration info.", error);
 			}
 		}
 	};
+
+	useEffect(() => {
+		setUIAFetchError(null);
+	}, [homeserver]);
 
 	useEffect(() => {
 		if (!isHsValid) return;
@@ -48,6 +72,7 @@ export function useRegistrationForm(props: registerFormProps) {
 		return () => {
 			cancelled = true;
 		};
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [homeserver, isHsValid, initClient, client]);
 
 	async function onSubmit(values: z.infer<typeof registerFormSchema>) {
@@ -64,5 +89,6 @@ export function useRegistrationForm(props: registerFormProps) {
 		onSubmit,
 		availableFlows,
 		isHsLoading,
+		UIAFetchError,
 	};
 }
