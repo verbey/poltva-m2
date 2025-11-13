@@ -24,6 +24,30 @@ export function useRegistrationForm(props: registerFormProps) {
 
 	const handleMatrixError = (error: MatrixError) => {
 		switch (error.errcode) {
+			case "M_USER_IN_USE": {
+				form.setError("username", { type: "server", message: "Username is already taken." });
+				break;
+			}
+			case "M_INVALID_USERNAME": {
+				form.setError("username", { type: "server", message: "Username is invalid." });
+				break;
+			}
+			case "M_WEAK_PASSWORD": {
+				form.setError("password", { type: "server", message: "Password is too weak." });
+				break;
+			}
+			case "M_THREEPID_IN_USE": {
+				form.setError("email", { type: "server", message: "Email is already in use." });
+				break;
+			}
+			case "M_THREEPID_INVALID": {
+				form.setError("email", { type: "server", message: "Email is invalid." });
+				break;
+			}
+			case "M_CAPTCHA_INVALID": {
+				setUIAFetchError("CAPTCHA was invalid. Please try again.");
+				break;
+			}
 			case "M_FORBIDDEN": {
 				setUIAFetchError("Registration is disabled on this homeserver.");
 				break;
@@ -41,7 +65,6 @@ export function useRegistrationForm(props: registerFormProps) {
 
 	const fetchAuthFlows = async (matrixClient: MatrixClient) => {
 		setAvailableFlows([]);
-		console.log(UIAFetchError);
 		try {
 			await matrixClient.registerRequest({});
 		} catch (error) {
@@ -76,12 +99,14 @@ export function useRegistrationForm(props: registerFormProps) {
 	}, [homeserver, isHsValid, initClient, client]);
 
 	async function onSubmit(values: z.infer<typeof registerFormSchema>) {
-		await startRegistration({
+		setUIAFetchError(null);
+		const response = await startRegistration({
 			username: values.username,
 			password: values.password,
 			initial_device_display_name: "Poltva Client",
 			inhibit_login: false,
 		});
+		if (response instanceof MatrixError) handleMatrixError(response);
 	}
 
 	return {

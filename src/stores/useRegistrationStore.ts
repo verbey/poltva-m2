@@ -15,7 +15,10 @@ interface RegistrationState {
 
 	initClient: (homeserver: string) => Promise<MatrixClient>;
 	reset: () => void;
-	startRegistration: (data: RegisterRequest, ctx?: { email?: string | null; registrationToken?: string | null }) => Promise<RegisterResponse | undefined>;
+	startRegistration: (
+		data: RegisterRequest,
+		ctx?: { email?: string | null; registrationToken?: string | null }
+	) => Promise<RegisterResponse | MatrixError | undefined>;
 	submitStage: (authDict: AuthDict) => Promise<RegisterResponse | undefined>;
 }
 
@@ -83,7 +86,8 @@ export const useRegistrationStore = create<RegistrationState>((set, get) => ({
 				return undefined;
 			}
 			console.error("Registration failed:", error);
-			return undefined;
+			if (error instanceof MatrixError) return error;
+			else return undefined;
 		} finally {
 			set({ isSubmitting: false });
 		}
