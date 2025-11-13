@@ -9,7 +9,7 @@ import { MatrixError, type IAuthData, type MatrixClient } from "matrix-js-sdk";
 
 export function useRegistrationForm(props: registerFormProps) {
 	const { homeserver, isHsValid, isHsLoading } = props;
-	const { initClient, startRegistration, client } = useRegistrationStore();
+	const { initClient, startRegistration, submitStage, currentStage } = useRegistrationStore();
 	const [availableFlows, setAvailableFlows] = useState<string[]>([]);
 	const [UIAFetchError, setUIAFetchError] = useState<string | null>(null);
 
@@ -20,6 +20,8 @@ export function useRegistrationForm(props: registerFormProps) {
 			password: "",
 			confirmPassword: "",
 			email: "",
+			registration_token: "",
+			terms_accepted: false,
 		},
 	});
 
@@ -80,6 +82,13 @@ export function useRegistrationForm(props: registerFormProps) {
 			}
 		}
 	};
+
+	useEffect(() => {
+		if (currentStage === "m.login.registration_token") submitStage({ type: "m.login.registration_token", token: form.getValues("registration_token") });
+		// else if (currentStage === "m.login.terms") submitStage({ type: "m.login.terms", accepted_terms: ["poltva_terms_v1"] });
+		else return;
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [currentStage]);
 
 	useEffect(() => {
 		setUIAFetchError(null);
