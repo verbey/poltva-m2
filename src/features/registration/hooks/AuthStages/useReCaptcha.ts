@@ -1,9 +1,10 @@
 import { useCallback } from "react";
 import { useRegistrationStore } from "@/stores/useRegistrationStore";
+import useRegistrationStages from "../useRegistrationStages";
 const NEXT_PUBLIC_RECAPTCHA_SITE_KEY = "6Lf_SN0rAAAAAP8axSVfjXcm22w6TDJK3l_a1_3r";
 export default function useReCaptcha() {
 	const siteKey = useRegistrationStore((s) => s.recaptchaSiteKey) ?? NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
-	const submitStage = useRegistrationStore((s) => s.submitStage);
+	const { submitStage } = useRegistrationStages();
 	const reset = useRegistrationStore((s) => s.reset);
 
 	const onChange = useCallback(

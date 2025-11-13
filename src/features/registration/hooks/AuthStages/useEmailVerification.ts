@@ -1,8 +1,9 @@
 import { useEffect, useState, useRef, useCallback } from "react";
 import { useRegistrationStore } from "@/stores/useRegistrationStore";
+import useRegistrationStages from "../useRegistrationStages";
 
 export default function useEmailVerification() {
-	const submitStage = useRegistrationStore((s) => s.submitStage);
+	const { submitStage } = useRegistrationStages();
 	const client = useRegistrationStore((s) => s.client);
 	const registrationEmail = useRegistrationStore((s) => s.registrationEmail);
 	const reset = useRegistrationStore((s) => s.reset);
@@ -11,7 +12,7 @@ export default function useEmailVerification() {
 	const [clientSecret, setClientSecret] = useState<string | null>(null);
 
 	const [isRequesting, setIsRequesting] = useState(false);
-	const [isSubmitting, setIsSubmitting] = useState(false);
+	const [isSubmittingToken, setisSubmittingToken] = useState(false);
 
 	const requestedRef = useRef(false);
 	const sendAttemptRef = useRef(1);
@@ -54,8 +55,8 @@ export default function useEmailVerification() {
 
 	const handleIClicked = useCallback(async () => {
 		if (!sid) return;
-		if (isSubmitting) return;
-		setIsSubmitting(true);
+		if (isSubmittingToken) return;
+		setisSubmittingToken(true);
 		try {
 			await submitStage({
 				type: "m.login.email.identity",
@@ -65,9 +66,9 @@ export default function useEmailVerification() {
 				},
 			});
 		} finally {
-			if (mountedRef.current) setIsSubmitting(false);
+			if (mountedRef.current) setisSubmittingToken(false);
 		}
-	}, [sid, clientSecret, submitStage, isSubmitting]);
+	}, [sid, clientSecret, submitStage, isSubmittingToken]);
 
 	const handleCancel = useCallback(() => {
 		reset();
@@ -77,7 +78,7 @@ export default function useEmailVerification() {
 		sid,
 		clientSecret,
 		isRequesting,
-		isSubmitting,
+		isSubmittingToken,
 		handleIClicked,
 		handleCancel,
 	};

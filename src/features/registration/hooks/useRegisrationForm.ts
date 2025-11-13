@@ -5,11 +5,13 @@ import { z } from "zod";
 import { registerFormSchema } from "../lib/validationSchemas";
 import registerFormProps from "../types/registerFormProps";
 import { useRegistrationStore } from "@/stores/useRegistrationStore";
+import useRegistrationStages from "./useRegistrationStages";
 import { MatrixError, type IAuthData, type MatrixClient } from "matrix-js-sdk";
 
 export function useRegistrationForm(props: registerFormProps) {
-	const { homeserver, isHsValid, isHsLoading } = props;
-	const { initClient, startRegistration, submitStage, currentStage, client } = useRegistrationStore();
+	const { homeserver, isHsValid, isHsLoading, isHsError, canSubmit } = props;
+	const { initClient, currentStage, client } = useRegistrationStore();
+	const { startRegistration, submitStage } = useRegistrationStages();
 	const [availableFlows, setAvailableFlows] = useState<string[]>([]);
 	const [UIAFetchError, setUIAFetchError] = useState<string | null>(null);
 
@@ -123,7 +125,7 @@ export function useRegistrationForm(props: registerFormProps) {
 		});
 		if (response instanceof MatrixError) handleMatrixError(response);
 	}
-
+	const blocked = !canSubmit || !homeserver || !!isHsLoading || !!isHsError || isHsValid === false;
 	return {
 		form,
 		onSubmit,
@@ -131,5 +133,6 @@ export function useRegistrationForm(props: registerFormProps) {
 		isHsLoading,
 		UIAFetchError,
 		consentUrl,
+		blocked,
 	};
 }

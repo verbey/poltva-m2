@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import useEmailVerification from "../../hooks/AuthStages/useEmailVerification";
 
 export default function EmailVerification() {
-	const { sid, isRequesting, isSubmitting, handleIClicked, handleCancel } = useEmailVerification();
+	const { sid, isRequesting, isSubmittingToken, handleIClicked, handleCancel } = useEmailVerification();
 
 	return (
 		<div>
@@ -12,8 +12,8 @@ export default function EmailVerification() {
 			{!isRequesting && sid && (
 				<>
 					<p>We sent a verification email. Click the button once you have clicked the link in the email.</p>
-					<Button type="button" onClick={handleIClicked} disabled={isSubmitting}>
-						{isSubmitting ? "Submitting…" : "I clicked the verification link"}
+					<Button type="button" onClick={handleIClicked} disabled={isSubmittingToken}>
+						{isSubmittingToken ? "Submitting…" : "I clicked the verification link"}
 					</Button>
 				</>
 			)}
@@ -21,7 +21,7 @@ export default function EmailVerification() {
 			{!isRequesting && !sid && <p>Unable to request email verification. Please try again later.</p>}
 
 			<div className="mt-4">
-				<Button type="button" onClick={handleCancel} disabled={isSubmitting || isRequesting}>
+				<Button type="button" onClick={handleCancel} disabled={isSubmittingToken || isRequesting}>
 					Cancel
 				</Button>
 			</div>
