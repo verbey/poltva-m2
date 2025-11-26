@@ -13,20 +13,11 @@ export default function useEmailVerification() {
 
 	const [isRequesting, setIsRequesting] = useState(false);
 	const [isSubmittingToken, setisSubmittingToken] = useState(false);
+	const [submitError, setSubmitError] = useState<string | null>(null);
 
-	const requestedRef = useRef(false);
 	const sendAttemptRef = useRef(1);
-	const mountedRef = useRef(true);
 
 	useEffect(() => {
-		return () => {
-			mountedRef.current = false;
-		};
-	}, []);
-
-	useEffect(() => {
-		if (requestedRef.current) return;
-		requestedRef.current = true;
 		const fetchEmailToken = async () => {
 			if (!registrationEmail) return;
 			if (!client) return;
@@ -37,6 +28,7 @@ export default function useEmailVerification() {
 				sendAttemptRef.current += 1;
 
 				const tokenResp = await client.requestRegisterEmailToken(registrationEmail, secret, sendAttempt);
+				console.log("Email token response:", tokenResp);
 				const returnedSid = (tokenResp as { sid?: string })?.sid;
 				if (returnedSid) {
 					setSid(returnedSid);
@@ -47,15 +39,16 @@ export default function useEmailVerification() {
 			} catch (err) {
 				console.error("requestEmailToken failed:", err);
 			} finally {
-				if (mountedRef.current) setIsRequesting(false);
+				setIsRequesting(false);
 			}
 		};
-		void fetchEmailToken();
+		fetchEmailToken();
 	}, [registrationEmail, client]);
 
 	const handleIClicked = useCallback(async () => {
 		if (!sid) return;
 		if (isSubmittingToken) return;
+		setSubmitError(null);
 		setisSubmittingToken(true);
 		try {
 			await submitStage({
@@ -65,8 +58,11 @@ export default function useEmailVerification() {
 					sid,
 				},
 			});
+		} catch {
+			console.error("Submitting email verification token failed.");
+			setSubmitError("We couldn't verify your email. Please make sure you clicked the link in the email.");
 		} finally {
-			if (mountedRef.current) setisSubmittingToken(false);
+			setisSubmittingToken(false);
 		}
 	}, [sid, clientSecret, submitStage, isSubmittingToken]);
 
@@ -79,6 +75,7 @@ export default function useEmailVerification() {
 		clientSecret,
 		isRequesting,
 		isSubmittingToken,
+		submitError,
 		handleIClicked,
 		handleCancel,
 	};

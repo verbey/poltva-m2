@@ -80,6 +80,7 @@ export default function useRegistrationStages() {
 			return resp as RegisterResponse;
 		} catch (err) {
 			if (err instanceof MatrixError && err.httpStatus === 401 && err.data) {
+				if (err.data.error == "Unable to get validated threepid") throw err; // хз насчет валидности
 				const nextAuth = err.data as IAuthData;
 				const flows = nextAuth.flows ?? [];
 				const completed = nextAuth.completed ?? [];

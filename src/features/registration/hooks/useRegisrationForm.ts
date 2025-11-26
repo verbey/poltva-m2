@@ -11,7 +11,7 @@ import { MatrixError, type IAuthData, type MatrixClient } from "matrix-js-sdk";
 export function useRegistrationForm(props: registerFormProps) {
 	const { homeserver, isHsValid, isHsLoading, isHsError, canSubmit } = props;
 	const { initClient, currentStage, client } = useRegistrationStore();
-	const { startRegistration, submitStage } = useRegistrationStages();
+	const { startRegistration, submitStage, setRegistrationEmail } = useRegistrationStages();
 	const [availableFlows, setAvailableFlows] = useState<string[]>([]);
 	const [UIAFetchError, setUIAFetchError] = useState<string | null>(null);
 
@@ -123,6 +123,8 @@ export function useRegistrationForm(props: registerFormProps) {
 			initial_device_display_name: "Poltva Client",
 			inhibit_login: false,
 		});
+		// ensure email is available for email identity flow
+		if (values.email?.trim()) setRegistrationEmail(values.email.trim());
 		if (response instanceof MatrixError) handleMatrixError(response);
 	}
 	const blocked = !canSubmit || isHsLoading || isHsError || !isHsValid || UIAFetchError !== null;
