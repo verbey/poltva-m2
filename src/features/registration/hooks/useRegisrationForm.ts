@@ -92,7 +92,8 @@ export function useRegistrationForm(props: registerFormProps) {
 	}, [client]);
 
 	useEffect(() => {
-		if (currentStage === "m.login.registration_token") submitStage({ type: "m.login.registration_token", token: form.getValues("registration_token") });
+		if (currentStage == "m.login.dummy") submitStage({ type: "m.login.dummy" });
+		else if (currentStage === "m.login.registration_token") submitStage({ type: "m.login.registration_token", token: form.getValues("registration_token") });
 		else if (currentStage === "m.login.terms") {
 			if (form.getValues("terms_accepted")) submitStage({ type: "m.login.terms" });
 			else form.setError("terms_accepted", { type: "manual", message: "You must accept the terms to proceed." });

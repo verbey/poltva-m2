@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo } from "react";
+import { useCallback } from "react";
 import { useRegistrationStore } from "@/stores/useRegistrationStore";
 import { MatrixError, type IAuthData, type AuthDict, type RegisterRequest, type RegisterResponse } from "matrix-js-sdk";
 
