@@ -97,17 +97,6 @@ export default function useRegistrationStages() {
 		}
 	}, []);
 
-	const stageFlags = useMemo(
-		() => ({
-			isCaptcha: currentStage === "m.login.recaptcha",
-			isEmailIdentity: currentStage === "m.login.email.identity",
-			isTerms: currentStage === "m.login.terms",
-			isRegistrationToken: currentStage === "m.login.registration_token",
-			isDummy: currentStage === "m.login.dummy",
-		}),
-		[currentStage]
-	);
-
 	return {
 		currentStage,
 		isSubmitting,
@@ -116,6 +105,5 @@ export default function useRegistrationStages() {
 		startRegistration,
 		submitStage,
 		setRegistrationEmail,
-		...stageFlags,
 	} as const;
 }
