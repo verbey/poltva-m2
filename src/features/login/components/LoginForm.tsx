@@ -4,6 +4,7 @@ import PasswordInput from "@/components/PasswordInput/PasswordInput";
 import useLoginForm from "../hooks/useLoginForm";
 
 import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/spinner";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
@@ -12,7 +13,7 @@ import Link from "next/link";
 import type LoginFormProps from "../types/LoginFormProps";
 
 function LoginForm(props: LoginFormProps) {
-	const { form, handleSubmit, blocked, submitError } = useLoginForm(props);
+	const { form, handleSubmit, blocked, submitError, isSubmitting } = useLoginForm(props);
 
 	return (
 		<Form {...form}>
@@ -43,8 +44,8 @@ function LoginForm(props: LoginFormProps) {
 						</FormItem>
 					)}
 				/>
-				<Button type="submit" disabled={blocked}>
-					Submit
+				<Button type="submit" disabled={blocked || isSubmitting}>
+					{isSubmitting && <Spinner className="mr-2 h-4 w-4" />} Submit
 				</Button>
 
 				{submitError ? <div className="mt-2 text-sm text-red-600">{submitError}</div> : null}

@@ -9,10 +9,12 @@ import PasswordInput from "@/components/PasswordInput/PasswordInput";
 import Link from "next/link";
 
 import { useRegistrationForm } from "../hooks/useRegisrationForm";
+import useRegistrationStages from "../hooks/useRegistrationStages";
 import registerFormProps from "../types/registerFormProps";
 
 export function RegisterForm(props: registerFormProps) {
 	const { form, onSubmit, availableFlows, blocked, UIAFetchError, consentUrl } = useRegistrationForm(props);
+	const { isSubmitting } = useRegistrationStages();
 	return (
 		<div className="w-full max-w-sm">
 			<Form {...form}>
@@ -126,8 +128,8 @@ export function RegisterForm(props: registerFormProps) {
 								)}
 							</div>
 						)}
-						<Button type="submit" className="w-full" disabled={blocked}>
-							{blocked && <Spinner className="mr-2 h-4 w-4" />}
+						<Button type="submit" className="w-full" disabled={blocked || isSubmitting}>
+							{isSubmitting && <Spinner className="mr-2 h-4 w-4" />}
 							Register
 						</Button>
 						{UIAFetchError ? <div className="mt-2 text-sm text-red-600">{UIAFetchError}</div> : null}

@@ -31,11 +31,13 @@ function useLoginForm(options: LoginFormProps) {
 	const setActiveClient = useSessionStore((state) => state.setActiveClient);
 
 	const [submitError, setSubmitError] = useState<string | null>(null);
+	const [isSubmitting, setIsSubmitting] = useState(false);
 
 	async function onSubmit(data: z.infer<typeof FormSchema> & { homeserver: string }) {
 		setSubmitError(null);
 
 		try {
+			setIsSubmitting(true);
 			const baseUrl = data.homeserver.startsWith("http") ? data.homeserver : `https://${data.homeserver}`;
 			const client = createMatrixClient({
 				baseUrl,
@@ -62,6 +64,8 @@ function useLoginForm(options: LoginFormProps) {
 			console.error("Login error:", error);
 			setSubmitError(normalizeLoginMatrixError(error));
 			return;
+		} finally {
+			setIsSubmitting(false);
 		}
 	}
 
@@ -78,6 +82,7 @@ function useLoginForm(options: LoginFormProps) {
 		blocked,
 		handleSubmit,
 		submitError,
+		isSubmitting,
 	};
 }
 

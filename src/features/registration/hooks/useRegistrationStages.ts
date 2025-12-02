@@ -29,6 +29,7 @@ export default function useRegistrationStages() {
 			useRegistrationStore.getState().reset();
 
 			try {
+				useRegistrationStore.setState({ isSubmitting: true });
 				const resp = await client.registerRequest(data);
 				useRegistrationStore.getState().reset();
 				addClientData({
