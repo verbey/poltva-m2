@@ -10,13 +10,9 @@ import Link from "next/link";
 
 import { useRegistrationForm } from "../hooks/useRegisrationForm";
 import registerFormProps from "../types/registerFormProps";
-import { useEffect } from "react";
 
 export function RegisterForm(props: registerFormProps) {
 	const { form, onSubmit, availableFlows, blocked, UIAFetchError, consentUrl } = useRegistrationForm(props);
-	useEffect(() => {
-		console.log("RegisterForm render - blocked:", blocked);
-	}, [blocked]);
 	return (
 		<div className="w-full max-w-sm">
 			<Form {...form}>
