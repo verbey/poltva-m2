@@ -7,6 +7,7 @@ import registerFormProps from "../types/registerFormProps";
 import { useRegistrationStore } from "@/stores/useRegistrationStore";
 import useRegistrationStages from "./useRegistrationStages";
 import { MatrixError, type IAuthData, type MatrixClient } from "matrix-js-sdk";
+import { normalizeRegistrationMatrixError, applyRegistrationMatrixError } from "@/lib/matrix/errors";
 
 export function useRegistrationForm(props: registerFormProps) {
 	const { homeserver, isHsValid, isHsLoading, isHsError, canSubmit } = props;
@@ -28,44 +29,9 @@ export function useRegistrationForm(props: registerFormProps) {
 	});
 
 	const handleMatrixError = (error: MatrixError) => {
-		switch (error.errcode) {
-			case "M_USER_IN_USE": {
-				form.setError("username", { type: "server", message: "Username is already taken." });
-				break;
-			}
-			case "M_INVALID_USERNAME": {
-				form.setError("username", { type: "server", message: "Username is invalid." });
-				break;
-			}
-			case "M_WEAK_PASSWORD": {
-				form.setError("password", { type: "server", message: "Password is too weak." });
-				break;
-			}
-			case "M_THREEPID_IN_USE": {
-				form.setError("email", { type: "server", message: "Email is already in use." });
-				break;
-			}
-			case "M_THREEPID_INVALID": {
-				form.setError("email", { type: "server", message: "Email is invalid." });
-				break;
-			}
-			case "M_CAPTCHA_INVALID": {
-				setUIAFetchError("CAPTCHA was invalid. Please try again.");
-				break;
-			}
-			case "M_FORBIDDEN": {
-				setUIAFetchError("Registration is disabled on this homeserver.");
-				break;
-			}
-			case "M_LIMIT_EXCEEDED": {
-				setUIAFetchError("Too many requests. Please try again later.");
-				break;
-			}
-			default: {
-				setUIAFetchError("Unhandled error occurred while fetching registration info.");
-				console.log("Unhandled error occurred while fetching registration info:", error);
-			}
-		}
+		const normalized = normalizeRegistrationMatrixError(error);
+		applyRegistrationMatrixError(form, normalized);
+		if (normalized.uiMessage) setUIAFetchError(normalized.uiMessage);
 	};
 
 	const fetchAuthFlows = async (matrixClient: MatrixClient) => {
@@ -102,7 +68,7 @@ export function useRegistrationForm(props: registerFormProps) {
 	}, [currentStage]);
 
 	useEffect(() => {
-		setUIAFetchError(null); //пофиксить странное оторбажение при смене хомесервера
+		setUIAFetchError(null);
 		if (!isHsValid) return;
 		let cancelled = false;
 		(async () => {
@@ -124,7 +90,6 @@ export function useRegistrationForm(props: registerFormProps) {
 			initial_device_display_name: "Poltva Client",
 			inhibit_login: false,
 		});
-		// ensure email is available for email identity flow
 		if (values.email?.trim()) setRegistrationEmail(values.email.trim());
 		if (response instanceof MatrixError) handleMatrixError(response);
 	}

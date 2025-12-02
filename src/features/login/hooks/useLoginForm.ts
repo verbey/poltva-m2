@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import createMatrixClient from "@/lib/matrix/createMatrixClient";
+import { normalizeLoginMatrixError } from "@/lib/matrix/errors";
 import useSessionStore from "@/stores/useSessionStore";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
@@ -59,7 +60,7 @@ function useLoginForm(options: LoginFormProps) {
 			router.push("/home");
 		} catch (error) {
 			console.error("Login error:", error);
-			setSubmitError("Login failed. Please check your credentials or try again.");
+			setSubmitError(normalizeLoginMatrixError(error));
 			return;
 		}
 	}

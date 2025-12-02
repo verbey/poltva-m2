@@ -32,7 +32,7 @@ export const useRegistrationStore = create<RegistrationState>((set) => ({
 
 	initClient: async (homeserver: string) => {
 		const baseUrl = homeserver.startsWith("http") ? homeserver : `https://${homeserver}`;
-		const client = createClient({ baseUrl });
+		const client = createClient({ baseUrl }); // createMatrixClient ???
 		set({ client });
 		return client;
 	},
